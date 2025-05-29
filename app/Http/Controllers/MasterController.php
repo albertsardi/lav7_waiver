@@ -24,12 +24,12 @@ class MasterController extends MainController {
         $today = date('Y-m-d');
         //dump(session('user')->Token);
         //show view
+        $out =[];
         dump($jr);
         switch($jr) {
             case 'products':
                 //$res = Product::selectRaw('Code,Name,UOM,Category,ActiveProduct,id')->where('Token', session('user')->Token)->get();
                 $res = Product::selectRaw('Code,Name,UOM,Category,ActiveProduct,id')->get();
-                $out = [];
                 foreach($res as $r) {
                     //$r->Qty = DB::select(" CALL getProductQty('$r->Code','$today') ")[0]->Total ?? 0;
                     $out[]=[
@@ -68,10 +68,19 @@ class MasterController extends MainController {
                 foreach($res as $r) {
                     $r->Bal = rand(1000,2000)*1000; //TODO
                 }
+                $out[]=[
+                    "<a href='".$r->id."'>".$r->AccCode."</a>",
+                    $r->AccName,
+                    $r->Phone,
+                    $r->email,
+                    $r->Address,
+                    $r->Active,
+                    rand(1000,2000)*1000, //TODO get Balance
+                ];
                 $data = [
                     'jr'        => $jr,
                     'title'     => ucfirst($jr).' List',
-                    'grid'      => ['Display Name','Code','Phone','Email','Address', 'Balance (Rp)', 'Status'],
+                    'gridhead'      => ['Display Name','Code','Phone','Email','Address', 'Status', 'Balance (Rp)'],
                     'caption'   => $this->makeCaption($jr),
                     '_url'      => env('API_URL').'/api/'.$jr,
                     'data'      => $res,
