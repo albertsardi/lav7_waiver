@@ -48,7 +48,7 @@ class MasterController extends MainController {
                     'gridhead'  => ['Product #','Product Name','Unit','Category','Active/not Active','Quantity'],
                     '_url'      => env('API_URL').'/api/'.$jr,
                     // 'data'      => $this->db_query('masterproduct','Code,Name,UOM,Category,12345 as Qty'),
-                    'data'      => $out,
+                    'griddata'      => $out,
                     'xxdatacol'   => json_encode([
                         [ 'data' => 'Code'],
                         [ 'data' => 'Name'],
@@ -56,6 +56,7 @@ class MasterController extends MainController {
                         [ 'data' => 'Category']
                     ])
                 ];
+                //dd($data);
                 break;
             case 'suppliers':
             case 'customers':
@@ -105,7 +106,7 @@ class MasterController extends MainController {
                     break;
                 }
 
-        $data['grid'] = $this->makeTable($res->toArray());
+        $data['grid'] = $this->makeTable($out);
         $data['gridhead'] = '<thead><tr><th>'.implode('</th><th>',$data['gridhead']).'</th></tr></thead>';
         dump($data['grid']);
         //return $data;
