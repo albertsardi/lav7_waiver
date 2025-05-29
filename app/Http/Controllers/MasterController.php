@@ -33,7 +33,7 @@ class MasterController extends MainController {
                 foreach($res as $r) {
                     //$r->Qty = DB::select(" CALL getProductQty('$r->Code','$today') ")[0]->Total ?? 0;
                     $out[]=[
-                        "<a href='".$r->id."'>".$r->Code."</a>",
+                        "<a href='".url('product/'.$r->id)."'>".$r->Code."</a>",
                         $r->Name,
                         $r->UOM,
                         $r->Category,
@@ -69,7 +69,7 @@ class MasterController extends MainController {
                     $r->Bal = rand(1000,2000)*1000; //TODO
                 }
                 $out[]=[
-                    "<a href='".$r->id."'>".$r->AccCode."</a>",
+                    "<a href='".url('customer/'.$r->id)."'>".$r->AccCode."</a>",
                     $r->AccName,
                     $r->Phone,
                     $r->email,
