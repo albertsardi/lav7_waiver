@@ -126,6 +126,15 @@ class MasterController extends MainController {
     //     return DB::table($db)->get();
     // }
 
+    function dataedit($jr,$id='') {
+        //return "$jr $id";
+        switch($jr) {
+            case 'product': return $this->editproduct($id);
+            case 'customer': return $this->editcustomer($id);
+            case 'supplier': return $this->editsupplier($id);
+        }
+    }
+
     function makeList($jr='') {
     switch($jr) {
         case 'product':
@@ -222,6 +231,70 @@ class MasterController extends MainController {
             return $this->table_generate($dat,['Product #','Product Name','Category','Type']);
             break;
         }
+    }
+
+    function editproduct($id) {
+        //return $id;
+        $data['jr'] = 'Product';
+        $data['data'] = Product::find($id);
+
+        $data['mCat'] = [
+            [1,'cat1'],
+            [2,'cat2'],
+        ];
+        $data['mType'] = [
+            [1,'type 1'],
+            [2,'type 2'],
+        ];
+        $data['mHpp'] = [
+            [1,'Hpp 1'],
+            [2,'Hpp 2'],
+        ];
+        dump($data);
+        return view('form-product', $data);
+
+    }
+
+    function editcustomer($id) {
+        //return $id;
+        $data['jr'] = 'Customer';
+        $data['data'] = Customer::find($id);
+
+        $data['mCat'] = [
+            [1,'cat1'],
+            [2,'cat2'],
+        ];
+        $data['mType'] = [
+            [1,'type 1'],
+            [2,'type 2'],
+        ];
+        $data['mHpp'] = [
+            [1,'Hpp 1'],
+            [2,'Hpp 2'],
+        ];
+        dump($data);
+        return view('form-supplier', $data);
+    }
+
+    function editsupplier($id) {
+        // return "supplier $id";
+        $data['jr'] = 'Customer';
+        $data['data'] = Customer::find($id);
+
+        $data['mCat'] = [
+            [1,'cat1'],
+            [2,'cat2'],
+        ];
+        $data['mType'] = [
+            [1,'type 1'],
+            [2,'type 2'],
+        ];
+        $data['mHpp'] = [
+            [1,'Hpp 1'],
+            [2,'Hpp 2'],
+        ];
+        dump($data);
+        return view('form-customer', $data);
     }
 
     // Export to Excel using koolreport
@@ -357,5 +430,7 @@ class MasterController extends MainController {
         }
         return "<tbody><tr>".$out."</tr></tbody>";
     }
+
+    
 
 }

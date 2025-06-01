@@ -1,7 +1,32 @@
 <?php
 
 
+function cimage($image, $alt='') {
+    $xx=asset($image);
+    return "<img src='$xx' alt='$alt'>";
+}
 
+class HTML
+{
+    public static function image($image, $alt='') {
+        $xx=asset($image);
+        return "<img src='$xx' alt='$alt'>";
+    }
+}
+
+class Image
+{
+    public static function get($image) {
+		$no_img = asset('assets/images/no_image.png');
+        $img = asset('assets/images/'.$image);
+		return $img;
+		if (file_exists($img)) {
+		  return $img;
+	  	} else {
+		  return $no_img;
+	  	}
+	}
+}
 
 
 
@@ -20,7 +45,7 @@ class Form
 												<div class='col-sm-8 mx-0'>{{input}}</div>
 												</div>";
 
-	public static function setData($dat) {
+	public static function setBindData($dat) {
 		self::$form_data = $dat;
 	}
 
@@ -60,8 +85,7 @@ class Form
 
 	//public static function text($name, $label, $value, $other=null) {
 	public static function text($name, $label, $other=[], $other2=[]) {
-		//$value = Form::getValue($name, $other);
-		$value = self::$form_data[$name];
+		$value = Form::getValue($name, $other);
 		if (!empty($other2)) $other = $other2;
 		//if (is_array($other)&&is_array($other2)) $other = array_merge($other,$other2);
 		//$other = array_merge($other,$other2);
@@ -74,23 +98,6 @@ class Form
 		$temp = str_replace("{{input}}", $input, $temp);
 
 		echo $temp;
-	}
-
-	public static function textarea($name, $label, $other=[], $other2=[]) {
-		//$value = Form::getValue($name, $other);
-		$value = self::$form_data[$name];
-		if (!empty($other2)) $other = $other2;
-		//if (is_array($other)&&is_array($other2)) $other = array_merge($other,$other2);
-		//$other = array_merge($other,$other2);
-		$input = "<textarea name='$name' id='$name' rows='4' cols='50'>$value</textarea>";
-
-		$slabel = "<label for='inputbarcode' class='col-sm-4 col-form-label mx-0'>$label</label>";
-		$out = "<div class='form-group form-row my-1'>
-					$slabel
-					$input
-				</div>";
-
-		echo $out;
 	}
 
 	public static function label($name, $label, $other=[], $other2=[]) {
@@ -106,8 +113,7 @@ class Form
 	}
 
 	public static function number($name, $label, $other=[], $other2=[]) {
-		//$value = Form::getValue($name, $other, 0);
-		$value = self::$form_data[$name]??0;
+		$value = Form::getValue($name, $other, 0);
 		if (!empty($other2)) $other = $other2;
 		$input = self::_numericbox($name, $value, $other);
 
@@ -127,24 +133,22 @@ class Form
 		// 		</div>";
 	}
 	public static function combo($name, $label, $list = [], $other = [], $other2 = []) {
-		//$value = Form::getValue($name, $value, 0);
-		$value = self::$form_data[$name]??'';
+		$value = Form::getValue($name, $value, 0);
 		if (!empty($other2)) $other = $other2;
 
 		$v= '';
 		$slist = "<option> - </option>";
 		if (count($list) > 0) {
-			foreach($list as $ls) {
-				$v1 = $ls[0] ?? ''; //dd($v1);
-				$v2 = $ls[1] ?? ''; //dd($v2);
-				if ($value == $v1) {
+			for ($a = 0; $a < count($list); $a++) {
+				$v1 = $list[$a]; //dd($v1);
+				$v2 = $list[$a]; //dd($v2);
+				if ($v == $v1) {
 					$slist .= "<option value='$v1' selected>" . $v2 . "</option>";
 				} else {
 					$slist .= "<option value='$v1'>" . $v2 . "</option>";
 				}
 			}
 		}
-		
 		$input = "<select name='$name' class='form-control'>
 					$slist
 				</select>";
@@ -420,6 +424,132 @@ class Form
 
 }
 
+#------------------------------------------------
+#- Form 2 Helper Functon
+#- (c) 2019 Albert (albertsardi@gmail.com)
+#------------------------------------------------
+class Form2
+{
+	//public static function text($name, $label, $value, $other=null) {
+	public static function text($name, $label, $other=null) {
+		// if (!is_array($other)) {$value = $other;} else {$value = isset($other['value'])? $other['value']:'';}
+		// if (!is_null(Form::$form_data)) $value= Form::_get_value($name, 0);
 
+		// if ($other==null) $value = Form::$form_data->$name;
+		// if(is_array($other)) {
+		// 	$value = isset($other->value)? $other->value:'';
+		// 	if (isset(Form::$form_data)) $value = Form::$form_data->$name;
+		// } else {
+		// 	$value = Form::$form_data->$name;
+		// }
+		$value = Form::getValue($name, $other);
+
+		echo "<div class='row mb-1'>
+				<div class='col-4 text-right'> $label </div>
+				<div class='col-8'>". Form::_textbox($name, $value, $other) ."</div>
+			</div>";
+	}
+	public static function number($name, $label, $other=null) {
+		$value = Form::getValue($name, $other, 0);
+
+		echo "<div class='row mb-1'>
+				<div class='col-4 text-right'> $label </div>
+				<div class='col-8'>". Form::_numericbox($name, $value, $other) ."</div>
+			</div>";
+	}
+	public static function check($name, $label, $other=null) {
+		$value = Form::getValue($name, $other, 0);
+		$ck = ($value==1 or $value)? 'checked' : '';
+
+		$ck = "<div class='form-check'>".
+				Form::_check($name, $value, $other).
+				"<label class='form-check-label' for='defaultCheck1'> $label </label>
+			  </div>";
+		echo "<div class='row mb-1'>
+				<div class='col-4 text-right'></div>
+				<div class='col-8'> $ck </div>
+			</div>";
+	}
+	public static function select($name, $label, $list = [], $other = null) {
+		$value = Form::getValue($name, $other);
+
+		echo "<div class='row mb-1'>
+				<div class='col-4 text-right'> $label </div>
+				<div class='col-8'>". Form::_select($name, $list, $value, $other) ."</div>
+			</div>";
+	}
+	public static function textwlookup($name, $label, $modal, $other=[]) {
+		$value = Form::getValue($name, $other);
+
+		$tbw = "<div class='form-row'>
+					<div class='input-group'>".
+						Form::_textbox($name, $value).
+						"<div class='input-group-prepend'>
+							<button id='$name-lookup' type='button' data-toggle='modal' data-target='#$modal' class='btn btn-outline-secondary btn-sm btnlookup'><i class='fa fa-search'></i></button>
+						</div>
+					</div>
+				</div>".
+				"<div class='form-row'>
+					<label id='".$name."-label' class='form-label' for='autoSizingCheck2'> <i>blank</i> </label>
+				</div>  ";
+		echo "<div class='row mb-1'>
+				<div class='col-4 text-right'> $label </div>
+				<div class='col-8'>". $tbw ."</div>
+			</div>";
+	}
+}
+
+#------------------------------------------------
+#- Modal Functon
+#- (c) Albert
+#------------------------------------------------
+class Modal
+{
+   public static function open($name, $label, $size="modal-lg", $other = "") {
+      if($other!='') $other=`style='$other'`;
+      echo "<div class='modal fade' id='modal-$name' >
+               <div class='modal-dialog $size'>
+                  <div class='modal-content' $other>
+                     <div class='modal-header'>
+                     <h5 class='modal-title'>$label</h5>
+                     <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                     </button>
+                     </div>
+                     <div class='modal-body'>";
+   }
+   public static function close($other= "") {
+      echo "</div>
+                  <div class='modal-footer'>
+                  <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+                  <button type='button' class='btn btn-primary'>Save changes</button>
+                  </div>
+               </div>
+            </div>
+            </div>";
+   }
+}
+
+#------------------------------------------------
+#- Card Functon
+#- (c) Albert
+#------------------------------------------------
+class Card
+{
+	public static function open($name='', $label='', $opt='') {
+		if ($opt != '') $opt = "style='$opt'";
+		$h = "<div class='card mb-3' id='$name'>";
+		if ($label != '') $h.= "<div class='card-header'>
+									<h3><i class='fa fa-check-square-o'></i> $label </h3>
+								</div>";
+		$h.="<div class='card-body' $opt>";
+		return $h;
+	}
+	public static function close($other = "") {
+		$footer = '';
+		if($other!='') $footer="<div class='card-footer'>$other</div>";
+		return "</div>$footer</div>";
+	}
+}
 
 ?>

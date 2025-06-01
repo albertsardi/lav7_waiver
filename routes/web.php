@@ -43,10 +43,11 @@ Route::get('logout', 'AppController@logout');
 
 
 //edit master & trans
-Route::get('product-edit/{id}', 'MasterController@dataedit');
-Route::get('supplier-edit/{id}', 'MasterController@dataedit');
-Route::get('customer-edit/{id}', 'MasterController@dataedit');
-Route::get('trans-edit/{id}', 'TransController@transedit')->name('trans-edit');
+Route::get('edit/{jr}/{id}', 'MasterController@dataedit');
+// Route::get('product-edit/{id}', 'MasterController@dataedit');
+// Route::get('supplier-edit/{id}', 'MasterController@dataedit');
+// Route::get('customer-edit/{id}', 'MasterController@dataedit');
+// Route::get('trans-edit/{id}', 'TransController@transedit')->name('trans-edit');
 
 //report
 Route::get('report/{id}', 'ReportController@makereport');

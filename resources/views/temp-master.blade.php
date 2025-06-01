@@ -8,9 +8,9 @@
 <html lang="en">
 <head>
     <!-- BEGIN CSS for this page -->
-    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" >
-    <link href="{{ asset('assets/css/fontawesome/font-awesome.min.css') }}" rel="stylesheet" type="text/css" >
-    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" type="text/css" >
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" >
+    <link href="{{ asset('css/fontawesome/font-awesome.min.css') }}" rel="stylesheet" type="text/css" >
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css" >
     <!-- END CSS for this page -->
 </head>
 
@@ -22,11 +22,11 @@
 <div id="main">
 
 	<!-- top bar navigation -->
-    @include('topmenu')
+    <x-topmenu />
     <!-- End Navigation -->
 
     <!-- Left Sidebar -->
-    @include('menu')
+    <x-menu />
     <!-- End Sidebar -->
 
 
