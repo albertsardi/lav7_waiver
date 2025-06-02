@@ -176,6 +176,11 @@ class MasterController extends MainController {
         return view('form-supplier', $data);
     }
 
+    function store(Request $req){
+        $save = $req->input();
+        return ($save);
+    }
+
     function makeList($jr='') {
     switch($jr) {
         case 'product':

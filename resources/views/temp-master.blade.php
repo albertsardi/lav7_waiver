@@ -54,13 +54,20 @@
 				<h5>Data Product saved.</h5>
 			</div>
             <div id='result'></div>
-            <form action="ajaxPost" method="post">
+            <form action="{{  url('datasave') }}" method="post">
+            @csrf
                 <!-- panel button -->
-                @include('buttonpanel',['jr'=>'customer'])
+                <div class="card card-body mb-2">
+				<div class="form-group row">
+					<div class="col-sm-10">
+				  		<button id='cmSave' type="submit" class="btn btn-primary">Save</button>
+			  			<button id='cmPrint' type="submit" class="btn btn-primary">Print</button>
+					</div>
+			  	</div>
+			</div>
 
                 <!-- <form  method='post'> -->
                 {{ Form::hidden('formtype', $jr) }}
-                {{ Form::hidden('_token',  csrf_token() ) }}
         
                 <div class='row'>
                     @yield('content')

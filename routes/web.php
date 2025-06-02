@@ -39,13 +39,14 @@ Route::get('logout', 'AppController@logout');
 
 
 //edit master & trans
+Route::get('edit/{jr}/{id}', 'MasterController@dataedit');
 // Route::group(['prefix'=>'edit'], function(){
 //    Route::get('product/{id}', 'MasterController@dataedit');
 //    Route::get('supplier/{id}', 'MasterController@dataedit');
 //    Route::get('customer/{id}', 'MasterController@dataedit');
 //    Route::get('trans/{id}', 'TransController@transedit')->name('trans-edit');
 // });
-Route::get('edit/{jr}/{id}', 'MasterController@dataedit');
+Route::post('datasave', 'MasterController@store');
 
 //report
 Route::get('report/{id}', 'ReportController@makereport');
