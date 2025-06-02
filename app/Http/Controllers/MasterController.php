@@ -6,6 +6,7 @@ use App\Http\Model\User;
 use App\Http\Model\Product;
 use App\Http\Model\AccountAddr;
 use App\Http\Model\Customer;
+use App\Http\Model\Supplier;
 use App\Http\Model\CustomerSupplierCategory;
 use App\Http\Model\Profile;
 use App\Http\Model\Account;
@@ -129,9 +130,15 @@ class MasterController extends MainController {
     function dataedit($jr,$id='') {
         //return "$jr $id";
         switch($jr) {
-            case 'product': return $this->editproduct($id);
-            case 'customer': return $this->editcustomer($id);
-            case 'supplier': return $this->editsupplier($id);
+            case 'product': 
+                return $this->editproduct($id);
+            break;
+            case 'customer': 
+                return $this->editcustomer($id);
+            break;
+            case 'supplier': 
+                return $this->editsupplier($id);
+            break;
         }
     }
 
@@ -257,8 +264,29 @@ class MasterController extends MainController {
 
     function editcustomer($id) {
         //return $id;
-        $data['jr'] = 'Customer';
+        $data['jr'] = 'customer';
         $data['data'] = Customer::find($id);
+
+        $data['mCat'] = [
+            [1,'cat1'],
+            [2,'cat2'],
+        ];
+        $data['mType'] = [
+            [1,'type 1'],
+            [2,'type 2'],
+        ];
+        $data['mHpp'] = [
+            [1,'Hpp 1'],
+            [2,'Hpp 2'],
+        ];
+        //dump($data);
+        return view('form-supplier', $data);
+    }
+
+    function editsupplier($id) {
+        //  return "supplier $id";
+        $data['jr'] = 'supllier';
+        $data['data'] = Supplier::find($id);
 
         $data['mCat'] = [
             [1,'cat1'],
@@ -274,27 +302,6 @@ class MasterController extends MainController {
         ];
         dump($data);
         return view('form-supplier', $data);
-    }
-
-    function editsupplier($id) {
-        // return "supplier $id";
-        $data['jr'] = 'Customer';
-        $data['data'] = Customer::find($id);
-
-        $data['mCat'] = [
-            [1,'cat1'],
-            [2,'cat2'],
-        ];
-        $data['mType'] = [
-            [1,'type 1'],
-            [2,'type 2'],
-        ];
-        $data['mHpp'] = [
-            [1,'Hpp 1'],
-            [2,'Hpp 2'],
-        ];
-        dump($data);
-        return view('form-customer', $data);
     }
 
     // Export to Excel using koolreport
