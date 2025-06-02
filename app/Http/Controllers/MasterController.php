@@ -6,7 +6,6 @@ use App\Http\Model\User;
 use App\Http\Model\Product;
 use App\Http\Model\AccountAddr;
 use App\Http\Model\Customer;
-use App\Http\Model\Supplier;
 use App\Http\Model\CustomerSupplierCategory;
 use App\Http\Model\Profile;
 use App\Http\Model\Account;
@@ -22,6 +21,7 @@ use Session;
 class MasterController extends MainController {
 
     function datalist($jr) {
+        return 'datalist';
         $today = date('Y-m-d');
         //dump(session('user')->Token);
         //show view
@@ -123,23 +123,57 @@ class MasterController extends MainController {
         return view('datalist', $data);
     }
 
-    // function db_query($db, $fld='*') {
-    //     return DB::table($db)->get();
-    // }
-
     function dataedit($jr,$id='') {
-        //return "$jr $id";
+        //return $jr.$id;
         switch($jr) {
-            case 'product': 
-                return $this->editproduct($id);
+            case 'product':
+                return $this->editProduct($id);
             break;
-            case 'customer': 
-                return $this->editcustomer($id);
+            case 'customer':
+                return $this->editCustomer($id);
             break;
-            case 'supplier': 
-                return $this->editsupplier($id);
+            case 'supplier':
+                return $this->editSupplier($id);
             break;
         }
+    }
+
+    function editProduct($id){
+        $data =[];
+        $data['jr'] = 'product';
+        $data['data'] = Product::find($id);
+        return view('form-product', $data);
+
+    }
+
+    function editCustomer($id){
+        $data =[];
+        $data['jr'] = 'customer';
+        $data['mCat'] = [
+            [1, 'cat1'],
+            [2, 'cat2'],
+        ];
+        $data['data'] = Product::find($id);
+        return view('form-customer', $data);
+    }
+
+    function editSupplier($id){
+        $data =[];
+        $data['jr'] = 'supplier';
+        $data['mCat'] = [
+            [1, 'cat1'],
+            [2, 'cat2'],
+        ];
+        $data['mType'] = [
+            [1, 'type1'],
+            [2, 'type2'],
+        ];
+        $data['mHpp'] = [
+            [1, 'hpp1'],
+            [2, 'hpp2'],
+        ];
+        $data['data'] = Product::find($id);
+        return view('form-supplier', $data);
     }
 
     function makeList($jr='') {
@@ -238,70 +272,6 @@ class MasterController extends MainController {
             return $this->table_generate($dat,['Product #','Product Name','Category','Type']);
             break;
         }
-    }
-
-    function editproduct($id) {
-        //return $id;
-        $data['jr'] = 'Product';
-        $data['data'] = Product::find($id);
-
-        $data['mCat'] = [
-            [1,'cat1'],
-            [2,'cat2'],
-        ];
-        $data['mType'] = [
-            [1,'type 1'],
-            [2,'type 2'],
-        ];
-        $data['mHpp'] = [
-            [1,'Hpp 1'],
-            [2,'Hpp 2'],
-        ];
-        dump($data);
-        return view('form-product', $data);
-
-    }
-
-    function editcustomer($id) {
-        //return $id;
-        $data['jr'] = 'customer';
-        $data['data'] = Customer::find($id);
-
-        $data['mCat'] = [
-            [1,'cat1'],
-            [2,'cat2'],
-        ];
-        $data['mType'] = [
-            [1,'type 1'],
-            [2,'type 2'],
-        ];
-        $data['mHpp'] = [
-            [1,'Hpp 1'],
-            [2,'Hpp 2'],
-        ];
-        //dump($data);
-        return view('form-supplier', $data);
-    }
-
-    function editsupplier($id) {
-        //  return "supplier $id";
-        $data['jr'] = 'supllier';
-        $data['data'] = Supplier::find($id);
-
-        $data['mCat'] = [
-            [1,'cat1'],
-            [2,'cat2'],
-        ];
-        $data['mType'] = [
-            [1,'type 1'],
-            [2,'type 2'],
-        ];
-        $data['mHpp'] = [
-            [1,'Hpp 1'],
-            [2,'Hpp 2'],
-        ];
-        dump($data);
-        return view('form-supplier', $data);
     }
 
     // Export to Excel using koolreport
@@ -437,7 +407,5 @@ class MasterController extends MainController {
         }
         return "<tbody><tr>".$out."</tr></tbody>";
     }
-
-    
 
 }

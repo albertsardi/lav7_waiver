@@ -10,7 +10,7 @@
                     <h3><i class="fa fa-check-square-o"></i> General data</h3>
                 </div>
                 <div class="card-body">
-                    {{ Form::setData($data) }}
+                    {{ Form::setdata($data) }}
                     {{ Form::text('sid', 'SID', ['placeholder'=>'ID','readonly'=>'true']) }}
                     {{ Form::text('AccCode', 'Code', ['readonly'=>'true']) }}
                     {{ Form::text('AccName', 'Name') }}

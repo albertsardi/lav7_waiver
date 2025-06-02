@@ -17,14 +17,10 @@
 
 //dataList
 Route::get('datalist/{jr}', 'MasterController@datalist');
-// Route::get('datalist/product', function () {
-//    //return 'list';
-//    return View::make('datalist');
-// });
 Route::get('accountdetail/{id}', 'TransController@accountdetail');
 
 //transList
-Route::get('translist/{jr}', 'TransController@translist');
+Route::get('list/{jr}', 'TransController@translist');
 
 
 
@@ -43,11 +39,13 @@ Route::get('logout', 'AppController@logout');
 
 
 //edit master & trans
+// Route::group(['prefix'=>'edit'], function(){
+//    Route::get('product/{id}', 'MasterController@dataedit');
+//    Route::get('supplier/{id}', 'MasterController@dataedit');
+//    Route::get('customer/{id}', 'MasterController@dataedit');
+//    Route::get('trans/{id}', 'TransController@transedit')->name('trans-edit');
+// });
 Route::get('edit/{jr}/{id}', 'MasterController@dataedit');
-// Route::get('product-edit/{id}', 'MasterController@dataedit');
-// Route::get('supplier-edit/{id}', 'MasterController@dataedit');
-// Route::get('customer-edit/{id}', 'MasterController@dataedit');
-// Route::get('trans-edit/{id}', 'TransController@transedit')->name('trans-edit');
 
 //report
 Route::get('report/{id}', 'ReportController@makereport');

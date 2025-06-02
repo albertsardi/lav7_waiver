@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class supplier extends Model
 {
     use HasFactory;
-    protected $table = 'suppliers';
+    protected $table = 'user';
 
     /**
      * The attributes that are mass assignable.
@@ -16,28 +16,7 @@ class supplier extends Model
      * @var array
      */
     protected $fillable = [
-        'sid',
-        'AccCode',
-        'AccName',
-        'Category',
-        'SubCategory',
-        'Salesman',
-        'CreditLimit',
-        'CreditActive',
-        'Warning',
-        'Unlimit',
-        'Combine',
-        'Taxno',
-        'TaxName',
-        'TaxAddr',
-        'PaymentAddr',
-        'Area2',
-        'PriceChannel',
-        'AccNo',
-        'Memo',
-        'AccType',
-        'Active',
-        'CreatedBy',
+        'user', 'allowance', 'hex'
     ];
 
     /**

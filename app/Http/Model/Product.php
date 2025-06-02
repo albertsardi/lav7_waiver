@@ -7,11 +7,11 @@ use Session;
 
 class Product extends MainModel
 {
-  protected $table = 'masterproduct';
+  protected $table = 'products';
   //protected $primaryKey = 'Code';
   //protected $keyType = 'string';
-  const CREATED_AT = 'CreatedDate'; //change laravel timestamp
-  const UPDATED_AT = 'UpdatedDate'; //change laravel creator stamp
+  // const CREATED_AT = 'CreatedDate'; //change laravel timestamp
+  // const UPDATED_AT = 'UpdatedDate'; //change laravel creator stamp
   protected $fillable = [
               'Code',
               'Name',
