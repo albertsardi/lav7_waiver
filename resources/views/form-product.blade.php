@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
             <div class="card mb-3">
                 <div class="card-header">
                     <h3><i class="fa fa-check-square-o"></i> Image</h3>
@@ -21,7 +21,7 @@
     
     <div class="row">
         <!-- PANEL1 -->
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
             <div class="card mb-3">
                 <div class="card-header">
                     <h3><i class="fa fa-check-square-o"></i> General data</h3>
@@ -30,7 +30,11 @@
                     {{ Form::setData($data) }}
                     {{ Form::text('sid', 'SID', ['placeholder'=>'ID']) }}
                     {{ Form::text('name', 'Product Name') }}
-                    {{ Form::textarea('content', 'Content') }}
+                    {{-- {{ Form::textarea('content', 'Content') }} --}}
+                    <div class='form-group form-row my-1'>
+                        <label for='inputContent' class='col-sm-4 col-form-label mx-0'>Content</label>
+                        <div class='col-sm-8 mx-0'><textarea name='content' id='content' rows='4' cols='20'>{{$data->Address??''}}</textarea></div>
+                    </div>
                     {{ Form::text('barcode', 'Barcode') }}
                     {{ Form::combo('Category', 'Category', $mCat) }}
                     {{ Form::combo('Type', 'Type', $mType) }}
@@ -44,7 +48,7 @@
         </div>
 
         <!-- PANEL2 -->
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
             <div class="card mb-3">
                 <div class="card-header">
                     <h3><i class="fa fa-check-square-o"></i> Other data</h3>

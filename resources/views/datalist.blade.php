@@ -36,12 +36,17 @@
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">						
                                 <div class="card mb-3">
                                     <div class="card-header">
-                                        <h3><i class="fa fa-table"></i> Data list</h3>
+                                        <h3><i class="fa fa-table"></i> {{ucfirst($jr)??'Data'}} list</h3>
                                     </div>
                                         
                                     <div class="card-body">
                                         <div class="table-responsive">
-                                        <table id="example1" class="table table-bordered table-hover display">
+                                        <div id='listData2' ></div>
+                                        [grid wrapper]
+                                        <div id="wrapper"></div>
+
+
+                                        <table id="listData" class="table table-bordered table-hover display">
                                             {!! $gridhead !!}
                                             {!! $grid !!}
                                         </div>
@@ -92,15 +97,28 @@
     <script src="assets/js/pikeadmin.js"></script>
     
     <!-- BEGIN Java Script for this page -->
-        <script src="{{ asset('assets/js/Chart.min.js') }}" type="text/javascript"></script>
-        <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}" type="text/javascript"></script>
-        <script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}" type="text/javascript"></script>
+        {{-- <script src="{{ asset('assets/js/Chart.min.js') }}" type="text/javascript"></script> --}}
+        {{-- grid.js --}}
+        <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js" type="text/javascript"></script>
+        <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" type="text/css" >
         <!-- Counter-Up-->
         <script src="{{ asset('assets/js/jquery.waypoints.min.js') }}" type="text/javascript"></script><!-- diperlukan untuk counterup.js -->
         <script src="{{ asset('assets/js/jquery.counterup.min.js') }}" type="text/javascript"></script>
+        
     
         <script>
+            
+            
             $(document).ready(function() {
+                new Grid({ 
+                        search:true,
+                        columns: [{name:'Name',sort:true}, 'Email'],
+                        data: [
+                            ['John', 'john@example.com'],
+                            ['Mike', 'mike@gmail.com']
+                        ] 
+                    }).render(document.getElementById('wrapper'));
+                    
                 // data-tables
                 $('#example1').DataTable();
                         

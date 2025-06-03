@@ -2,7 +2,7 @@
 
   <!-- LOGO -->
   <div class="headerbar-left">
-    <a href="index.php" class="logo">{{  asset(" images/logo.png",'AllegroLogo') }} <span>Allegro</span></a>
+    <a href="index.php" class="logo">{{ asset('images/LOGO.png','AllegroLogo') }} <span>Allegro</span></a>
       </div>
 
       <nav class="navbar-custom">

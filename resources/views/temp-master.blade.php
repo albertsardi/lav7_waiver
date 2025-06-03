@@ -10,6 +10,7 @@
     <!-- BEGIN CSS for this page -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" >
     <link href="{{ asset('css/fontawesome/font-awesome.min.css') }}" rel="stylesheet" type="text/css" >
+    
     <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css" >
     <!-- END CSS for this page -->
 </head>
@@ -50,6 +51,17 @@
 					</div>
 			     </div>
 
+            {{-- post result --}}
+            @if (session()->has('saveOK'))
+                <div class="alert alert-success" role="alert">
+                    Save Sukses.
+                </div>
+            @endif
+            @if (session()->has('saveError'))
+            <div class="alert alert-danger" role="alert">
+                {{ session('saveError') }}
+            </div>
+            @endif
 			<div class="alert alert-success invisible" role="alert">
 				<h5>Data Product saved.</h5>
 			</div>
@@ -68,6 +80,7 @@
 
                 <!-- <form  method='post'> -->
                 {{ Form::hidden('formtype', $jr) }}
+                {{ Form::hidden('id', $id) }}
         
                 <div class='row'>
                     @yield('content')
@@ -103,12 +116,16 @@
 </div>
 <!-- END main -->
 
-<!-- BEGIN Java Script for this page -->
+<!-- BEGIN PLugin Java Script for this page -->
 <script src="{{ asset('assets/js/jquery.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/js/pikeadmin.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/js/bootstrap.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/js/bootbox.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/js/fastclick.js') }}" type="text/javascript"></script>
+
+{{-- <script src="{{ asset('assets/js/helper_metroform.js') }}" type="text/javascript"></script> --}}
+
+<!-- BEGIN Java Script for this page -->
 {{-- <script src="{{ asset('assets/js/helper_metroform.js') }}" type="text/javascript"></script> --}}
 @yield('js')
 <!-- END Java Script for this page -->

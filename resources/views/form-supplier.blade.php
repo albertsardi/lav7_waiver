@@ -10,8 +10,10 @@
                     <h3><i class="fa fa-check-square-o"></i> General data</h3>
                 </div>
                 <div class="card-body">
+                    @csrf
                     {{ Form::setdata($data) }}
                     {{ Form::text('sid', 'SID', ['placeholder'=>'ID','readonly'=>'true']) }}
+                    <!-- {{ Form::text('id', 'ID', ['readonly'=>'true','value'=>'123']) }} -->
                     {{ Form::text('AccCode', 'Code', ['readonly'=>'true']) }}
                     {{ Form::text('AccName', 'Name') }}
                     {{ Form::text('Salesman', 'Salesman') }}

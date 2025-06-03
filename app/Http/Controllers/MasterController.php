@@ -2,10 +2,12 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use App\Http\Model\User;
 use App\Http\Model\Product;
 use App\Http\Model\AccountAddr;
 use App\Http\Model\Customer;
+use App\Http\Model\Supplier;
 use App\Http\Model\CustomerSupplierCategory;
 use App\Http\Model\Profile;
 use App\Http\Model\Account;
@@ -21,7 +23,7 @@ use Session;
 class MasterController extends MainController {
 
     function datalist($jr) {
-        return 'datalist';
+        // return 'datalist';
         $today = date('Y-m-d');
         //dump(session('user')->Token);
         //show view
@@ -30,7 +32,7 @@ class MasterController extends MainController {
         switch($jr) {
             case 'products':
                 //$res = Product::selectRaw('Code,Name,UOM,Category,ActiveProduct,id')->where('Token', session('user')->Token)->get();
-                $res = Product::selectRaw('Code,Name,UOM,Category,ActiveProduct,id')->get();
+                $res = Product::get();
                 foreach($res as $r) {
                     //$r->Qty = DB::select(" CALL getProductQty('$r->Code','$today') ")[0]->Total ?? 0;
                     $out[]=[
@@ -60,11 +62,30 @@ class MasterController extends MainController {
                 //dd($data);
                 break;
             case 'suppliers':
+                $res = Supplier::get();
+                //dd($res);
+                foreach($res as $r) {
+                    $out[]=[
+                        "<a href='".url('edit/supplier/'.$r->id)."'>".$r->AccCode."</a>",
+                        $r->AccName,
+                        $r->Phone,
+                        $r->email,
+                        $r->Address,
+                        $r->Active,
+                        rand(1000,2000)*1000, //TODO get Balance
+                    ];
+                }
+                $data = [
+                    'jr'        => $jr,
+                    'title'     => ucfirst($jr).' List',
+                    'gridhead'      => ['Display Name','Code','Phone','Email','Address', 'Status', 'Balance (Rp)'],
+                    'caption'   => $this->makeCaption($jr),
+                    '_url'      => env('API_URL').'/api/'.$jr,
+                    'data'      => $res,
+                ];
+                break;
             case 'customers':
-                $res =Customer::selectRaw('AccName,masteraccount.AccCode,Phone,Email,Address,Active,masteraccount.id')
-                        ->leftJoin('masteraccountaddr as ma', 'masteraccount.id', '=', 'ma.AccountId')
-                        ->whereRaw('(DefAddr=1 or DefAddr is null)')
-                        ->get();
+                $res = Customer::get();
                 //dd($res);
                 foreach($res as $r) {
                     $r->Bal = rand(1000,2000)*1000; //TODO
@@ -140,7 +161,20 @@ class MasterController extends MainController {
 
     function editProduct($id){
         $data =[];
+        $data['id'] = $id;
         $data['jr'] = 'product';
+        $data['mCat'] = [
+            [1, 'cat1'],
+            [2, 'cat2'],
+        ];
+        $data['mType'] = [
+            [1, 'type1'],
+            [2, 'type2'],
+        ];
+        $data['mHpp'] = [
+            [1, 'hpp1'],
+            [2, 'hpp2'],
+        ];
         $data['data'] = Product::find($id);
         return view('form-product', $data);
 
@@ -160,6 +194,7 @@ class MasterController extends MainController {
     function editSupplier($id){
         $data =[];
         $data['jr'] = 'supplier';
+        $data['id'] = $id;
         $data['mCat'] = [
             [1, 'cat1'],
             [2, 'cat2'],
@@ -172,13 +207,27 @@ class MasterController extends MainController {
             [1, 'hpp1'],
             [2, 'hpp2'],
         ];
-        $data['data'] = Product::find($id);
+        
+        $data['data'] = Supplier::find($id);
+        dump($data);
         return view('form-supplier', $data);
     }
 
     function store(Request $req){
         $save = $req->input();
-        return ($save);
+        $save['CreatedBy'] = 'User';
+        // return ($save);
+
+        if ($save['formtype']=='supplier') {
+            $data = Supplier::find($save['id']);
+            $res=$data->update($save);
+            // return dd($res);
+            if ($res) { //save OK
+                return redirect::to(url('edit/supplier/'.$save['id']))->with('saveOK','Save sucessfull');
+            } else {
+                return redirect::to(url('edit/supplier/'.$save['id']))->with('saveError',json_encode($res));
+            }
+        }
     }
 
     function makeList($jr='') {
