@@ -218,16 +218,37 @@ class MasterController extends MainController {
         $save['CreatedBy'] = 'User';
         // return ($save);
 
-        if ($save['formtype']=='supplier') {
-            $data = Supplier::find($save['id']);
-            $res=$data->update($save);
-            // return dd($res);
+        if(!empty($save['id'])) {
+            //update
+            if ($save['formtype']=='supplier') {
+                $data = Supplier::find($save['id']);
+                $res=$data->update($save);
+                return dd($res);
+                if ($res) { //save OK
+                    return redirect::to(url('edit/supplier/'.$save['id']))->with('saveOK','Save sucessfull');
+                } else {
+                    return redirect::to(url('edit/supplier/'.$save['id']))->with('saveError',json_encode($res));
+                }
+            }
+
+        } else {
+            // create new
+            $data = null;
+            if($save['formtype']=='product') $data = new Product();
+            if($save['formtype']=='customer') $data = new Customer();
+            if($save['formtype']=='supplier') $data = new Supplier();
+            if(is_null($data)) return dd('Error !!! formType not found');
+            $res = $data->create($save);
+            //dd($res->id);
+            $lastID = $res->id; //get last save id
+
             if ($res) { //save OK
-                return redirect::to(url('edit/supplier/'.$save['id']))->with('saveOK','Save sucessfull');
+                return redirect::to(url('edit/supplier/'.$lastID))->with('saveOK','Save sucessfull');
             } else {
-                return redirect::to(url('edit/supplier/'.$save['id']))->with('saveError',json_encode($res));
+                return redirect::to(url('edit/supplier/'.$LastID))->with('saveError',json_encode($res));
             }
         }
+        
     }
 
     function makeList($jr='') {
