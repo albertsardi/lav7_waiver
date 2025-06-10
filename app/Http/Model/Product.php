@@ -13,28 +13,18 @@ class Product extends MainModel
   // const CREATED_AT = 'CreatedDate'; //change laravel timestamp
   // const UPDATED_AT = 'UpdatedDate'; //change laravel creator stamp
   protected $fillable = [
-              'Code',
-              'Name',
-              'Category',
-              'Brand',
-              'Type',
-              'MinStock',
-              'MackStock',
-              'MinOrder',
-              'StockProduct',
-              'ActiveProduct',
-              'canBuy',
-              'canSell',
-              'UOM',
-              'SellPrice',
-              'Barcode',
-              'HppBy',
-              'AccHppNo',
-              'AccPurchaseNo',
-              'AccSellNo',
-              'AccInventoryNo',
-              'Memo',
-              'Token' ];
+              'image',
+              'image',
+              'name',
+              'barcode',
+              'slug',
+              'category_id',
+              'content',
+              'weight',
+              'price',
+              'discount',
+              'createdBy',
+              'sid' ];
 
   //protected $appends = ['availability'];
 

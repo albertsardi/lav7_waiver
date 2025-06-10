@@ -38,6 +38,10 @@ Route::get('setting', 'AppController@setting');
 Route::get('logout', 'AppController@logout');
 
 
+//edit  trans
+// Route::get('edit/salesorder/{id?}', 'SalesController@dataedit');
+// Route::get('edit/purchase/{id?}', 'PurchaseController@dataedit');
+
 //edit master & trans
 Route::get('edit/{jr}/{id?}', 'MasterController@dataedit');
 // Route::group(['prefix'=>'edit'], function(){
@@ -48,7 +52,7 @@ Route::get('edit/{jr}/{id?}', 'MasterController@dataedit');
 // });
 Route::post('datasave', 'MasterController@store');
 
-//report
+//reportmaster
 Route::get('report/{id}', 'ReportController@makereport');
 // Route::get('report/{id}', 'ReportController@examplepdf');
 

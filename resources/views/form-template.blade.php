@@ -6,16 +6,16 @@
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
         <div class="card mb-3">
             <div class="card-header">
-                <h3><i class="fa fa-check-square-o"></i> General data</h3>
+                <h3><i class="fa fa-check-square-o"></i> Sales Order</h3>
             </div>
             <div class="card-body">
-                {{ Form::setData($data) }}
+                {{-- {{ Form::setData($data) }} --}}
                 {{ Form::text('sid', 'SID #', ['placeholder'=>'ID','readonly'=>'true']) }}
                 {{ Form::text('name', 'Name') }}
                 {{ Form::text('email', 'Email') }}
                 {{ Form::text('password', 'Password') }}
-                {{ Form::combo('Type', 'Type', $mType) }}
-                {{ Form::combo('HppBy', 'HPP', $mHpp) }}
+                {{-- {{ Form::combo('Type', 'Type', $mType) }} --}}
+                {{-- {{ Form::combo('HppBy', 'HPP', $mHpp) }} --}}
             </div>
         </div><!-- end card-->
     </div>

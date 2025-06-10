@@ -13,15 +13,15 @@ use App\Http\Model\Profile;
 use App\Http\Model\Account;
 use App\Http\Model\Bank;
 use App\Http\Model\Order;
+use App\Http\Model\Purchase;
 use App\report\MyReport;
 use \koolreport\widgets\koolphp\Table;
 use \koolreport\export\Exportable;
 //use \koolreport\cloudexport\Exportable;
 //use HTML;
-use App\Http\Controllers\TransController;
 use Session;
 
-class MasterController extends MainController {
+class TransController extends MainController {
 
     function datalist($jr) {
         // return 'datalist';
@@ -148,23 +148,20 @@ class MasterController extends MainController {
     function dataedit($jr,$id='') {
         //return $jr.$id;
         switch($jr) {
-            case 'product':
-                return $this->editProduct($id);
+            case 'purchase':
+                return $this->editPurchase($id);
             break;
             case 'customer':
                 return $this->editCustomer($id);
             break;
             case 'supplier':
                 return $this->editSupplier($id);
-            case 'purchase':
-                //return 'purchase';
-                //$tc = new TransController;
-                return TransController::editPurchase($id);
             break;
         }
     }
 
-    function editProduct($id=''){
+    function editPurchase($id=''){
+        // return 'edit purchase '.$id;
         $data =[];
         $data['id'] = $id;
         $data['jr'] = 'product';
@@ -180,18 +177,18 @@ class MasterController extends MainController {
             [1, 'hpp1'],
             [2, 'hpp2'],
         ];
-        $dat = Product::find($id);
+        $dat = Purchase::find($id);
+        //return dd($dat);
         //dd($data['data']);
         if($dat){
             $data['data'] = $dat;
-            $data['image'] = $this->getProductImage($data['data']['image']??'null');
         } else {
             $data['data'] = [];
             $data['image'] = 'images/no-image.png';
         }
         
         dump($data);
-        return view('form-product', $data);
+        return view('purchase.form', $data);
 
     }
 

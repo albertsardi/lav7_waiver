@@ -97,7 +97,7 @@
                               <!-- item-->
                               <a href="#" class="dropdown-item notify-item">
                                   <div class="notify-icon bg-faded">
-                                      <img src="assets/images/avatars/avatar2.png" alt="img" class="rounded-circle img-fluid">
+                                      <img src="{{asset('images/avatars/avatar2.png')}}" alt="img" class="rounded-circle img-fluid">
                                   </div>
                                   <p class="notify-details">
                                       <b>John Doe</b>
@@ -109,7 +109,7 @@
                               <!-- item-->
                               <a href="#" class="dropdown-item notify-item">
                                   <div class="notify-icon bg-faded">
-                                      <img src="assets/images/avatars/avatar3.png" alt="img" class="rounded-circle img-fluid">
+                                      <img src="{{asset('images/avatars/avatar3.png')}}" alt="img" class="rounded-circle img-fluid">
                                   </div>
                                   <p class="notify-details">
                                       <b>Michael Cox</b>
@@ -121,7 +121,7 @@
                               <!-- item-->
                               <a href="#" class="dropdown-item notify-item">
                                   <div class="notify-icon bg-faded">
-                                      <img src="assets/images/avatars/avatar4.png" alt="img" class="rounded-circle img-fluid">
+                                      <img src="{{asset('images/avatars/avatar4.png')}}" alt="img" class="rounded-circle img-fluid">
                                   </div>
                                   <p class="notify-details">
                                       <b>Michelle Dolores</b>

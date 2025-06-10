@@ -45,7 +45,7 @@ class Form
 												<div class='col-sm-8 mx-0'>{{input}}</div>
 												</div>";
 
-	public static function setdata($dat) {
+	public static function setData($dat) {
 		self::$form_data = $dat;
 	}
 

@@ -18,10 +18,9 @@ use \koolreport\widgets\koolphp\Table;
 use \koolreport\export\Exportable;
 //use \koolreport\cloudexport\Exportable;
 //use HTML;
-use App\Http\Controllers\TransController;
 use Session;
 
-class MasterController extends MainController {
+class SalesController extends MainController {
 
     function datalist($jr) {
         // return 'datalist';
@@ -147,21 +146,39 @@ class MasterController extends MainController {
 
     function dataedit($jr,$id='') {
         //return $jr.$id;
-        switch($jr) {
-            case 'product':
-                return $this->editProduct($id);
-            break;
-            case 'customer':
-                return $this->editCustomer($id);
-            break;
-            case 'supplier':
-                return $this->editSupplier($id);
-            case 'purchase':
-                //return 'purchase';
-                //$tc = new TransController;
-                return TransController::editPurchase($id);
-            break;
-        }
+        $data = [];
+        
+        $data = [
+            'jr'=>$jr,
+            'id'=>$id
+        ];
+        $data['category'] = ['cat1','cat2','cat3','cat4'];
+        $product = [
+            ['category'=>'Cat',
+            'name'=>'c1 product1',
+            'Price'=>100000, ],
+            ['category'=>'Cat1',
+            'name'=>'c1 product2',
+            'Price'=>100000, ],
+            ['category'=>'Cat1',
+            'name'=>'c1 product3',
+            'Price'=>100000, ],
+            ['category'=>'Cat1',
+            'name'=>'c1 product4',
+            'Price'=>100000, ],
+            ['category'=>'Cat1',
+            'name'=>'c1 product5',
+            'Price'=>100000, ],
+            ['category'=>'Cat2',
+            'name'=>'B1 product1',
+            'Price'=>100000, ],
+            ['category'=>'Cat2',
+            'name'=>'B1 product2',
+            'Price'=>100000, ],
+        ];
+        $data['product'] = json_encode($product);
+        return view('form-salesorder', $data); 
+        
     }
 
     function editProduct($id=''){

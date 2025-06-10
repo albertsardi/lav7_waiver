@@ -6,40 +6,55 @@
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
         <div class="card mb-3">
             <div class="card-header">
-                <h3><i class="fa fa-check-square-o"></i> General data</h3>
+                <h3><i class="fa fa-check-square-o"></i> Purchase</h3>
             </div>
             <div class="card-body">
-                {{ Form::setData($data) }}
-                {{ Form::text('sid', 'SID #', ['placeholder'=>'ID','readonly'=>'true']) }}
-                {{ Form::text('name', 'Name') }}
-                {{ Form::text('email', 'Email') }}
-                {{ Form::text('password', 'Password') }}
-                {{ Form::combo('Type', 'Type', $mType) }}
-                {{ Form::combo('HppBy', 'HPP', $mHpp) }}
+                {{-- {{ Form::setData($data) }} --}}
+                {{ Form::text('sid', 'TRans #', ['placeholder'=>'ID','readonly'=>'true']) }}
+                {{ Form::text('TransDate', 'Date') }}
+                {{ Form::text('DoDate', 'DO Date') }}
+                {{ Form::text('AccCode', 'Supplier') }}
+                {{ Form::text('AccName', '') }}
+                {{ Form::text('FromPO', 'From PO #') }}
+                {{ Form::text('FromInv', 'From Inv #') }}
+                {{-- {{ Form::combo('Warehouse', 'Warehouse', $mWarehouse) }} --}}
+                {{-- {{ Form::combo('Salesman', 'Salesman', $mSalesman) }} --}}
             </div>
         </div><!-- end card-->
     </div>
 
     <!-- PANEL2 -->
-    {{-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
         <div class="card mb-3">
             <div class="card-header">
                 <h3><i class="fa fa-check-square-o"></i> Other data</h3>
             </div>
             <div class="card-body">
-                {{ Form::text('UOM', 'Main Unit') }}
-                {{ Form::text('ProductionUnit', 'Production Unit') }}
-                {{ Form::number('MinStock', 'Minimal Stock') }}
-                {{ Form::number('MaxStock', 'Maximal Stock') }}
-                {{ Form::number('SellPrice', 'Sell Price') }}
-                {{ Form::number('LastBuyPrice', 'Last Buy Price',['disabled'=>true]) }}
+                {{ Form::text('Freight', 'Freight Percent') }} %
+                {{ Form::text('FreightAmount', '') }}
+                {{ Form::number('DiscPercentH', 'Disc') }} %
+                {{ Form::number('DIscAmountH', '') }}
+                {{ Form::number('Total', 'Total') }}
+                {{ Form::number('TotalPaid', 'Total Paid') }}
                 <br/><br/><br/><br/>
                 {{-- {{ Form::textwlookup('AccHppNo', 'HPP Account No', ['modal'=>'modal-account']) }} --}}
                 {{-- {{ Form::textwlookup('AccSellNo', 'Income Account No', ['modal'=>'modal-account']) }} --}}
                 {{-- {{ Form::textwlookup('AccInventoryNo', 'Inventory Account No', ['modal'=>'modal-account']) }} --}}
             </div>
         </div><!-- end card-->
-    </div> --}}
+    </div> 
+
+    <!-- Detail -->
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3><i class="fa fa-check-square-o"></i> Detail</h3>
+            </div>
+            <div class="card-body">
+                
+            </div>
+        </div><!-- end card-->
+    </div> 
 @stop
                     
 @section('js')

@@ -117,11 +117,12 @@
 <!-- END main -->
 
 <!-- BEGIN PLugin Java Script for this page -->
-<script src="{{ asset('assets/js/jquery.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/js/pikeadmin.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/js/bootstrap.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/js/bootbox.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/js/fastclick.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/jquery.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/popper.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/pikeadmin.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/bootbox.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/fastclick.js') }}" type="text/javascript"></script>
 
 {{-- <script src="{{ asset('assets/js/helper_metroform.js') }}" type="text/javascript"></script> --}}
 

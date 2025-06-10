@@ -8,7 +8,16 @@
                     <h3><i class="fa fa-check-square-o"></i> Image</h3>
                 </div>
                 <div class="card-body">
-                    <img src="{{ asset('productImage/product1.jpg') }}" class="img-fluid" alt="Product Image">
+                    @php
+                        //dd($data);
+                        //$noimage = 'images/no-image.png';
+                        //if (is_null($data['image']) $image = $noimage; 
+                        //if (file_exists(asset('productImage/'.$data['image'])) $image = 'productImage/'.$data['image'];
+
+                        //$image = !empty($data['image'])?'productImage/'.$data->image : 'images/no-images.png'; 
+                        //dd($image);
+                    @endphp
+                    <img src="{{ asset($data['image']??'images/no-image.png') }}" class="img-fluid" alt="Product Image">
                     <?php
                     //dd($data->image);
                     ?>
@@ -28,15 +37,16 @@
                 </div>
                 <div class="card-body">
                     {{ Form::setData($data) }}
-                    {{ Form::text('sid', 'SID', ['placeholder'=>'ID']) }}
+                    {{ Form::text('sid', 'SID', ['placeholder'=>'SID', 'readonly'=>'true']) }}
                     {{ Form::text('name', 'Product Name') }}
                     {{-- {{ Form::textarea('content', 'Content') }} --}}
                     <div class='form-group form-row my-1'>
                         <label for='inputContent' class='col-sm-4 col-form-label mx-0'>Content</label>
-                        <div class='col-sm-8 mx-0'><textarea name='content' id='content' rows='4' cols='20'>{{$data->Address??''}}</textarea></div>
+                        <div class='col-sm-8 mx-0'><textarea name='content' id='content' rows='4' cols='20'>{{$data->content??''}}</textarea></div>
                     </div>
+                    {{ Form::number('price', 'Sell Price') }}
                     {{ Form::text('barcode', 'Barcode') }}
-                    {{ Form::combo('Category', 'Category', $mCat) }}
+                    {{ Form::combo('category_id', 'Category', $mCat) }}
                     {{ Form::combo('Type', 'Type', $mType) }}
                     {{ Form::combo('HppBy', 'HPP', $mHpp) }}
                     {{ Form::checkbox('ActiveProduct', 'Active Product') }}
@@ -55,11 +65,9 @@
                 </div>
                 <div class="card-body">
                     {{ Form::text('unit', 'Main Unit') }}
-                    {{ Form::number('price', 'Sell Price') }}
                     {{ Form::number('weight', 'Weight') }}
                     {{ Form::number('minstock', 'Minimal Stock') }}
                     {{ Form::number('maxstock', 'Maximal Stock') }}
-                    {{ Form::number('price', 'Sell Price') }}
                     {{ Form::number('LastBuyPrice', 'Last Buy Price',['disabled'=>true]) }}
                     <br/><br/><br/><br/>
                     {{-- {{ Form::textwlookup('AccHppNo', 'HPP Account No', ['modal'=>'modal-account']) }} --}}
