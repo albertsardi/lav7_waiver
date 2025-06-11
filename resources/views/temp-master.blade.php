@@ -10,6 +10,7 @@
     <!-- BEGIN CSS for this page -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" >
     <link href="{{ asset('css/fontawesome/font-awesome.min.css') }}" rel="stylesheet" type="text/css" >
+    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
     
     <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css" >
     <!-- END CSS for this page -->
@@ -122,6 +123,7 @@
 <script src="{{ asset('js/pikeadmin.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/bootbox.min.js') }}" type="text/javascript"></script>
+<script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
 <script src="{{ asset('js/fastclick.js') }}" type="text/javascript"></script>
 
 {{-- <script src="{{ asset('assets/js/helper_metroform.js') }}" type="text/javascript"></script> --}}

@@ -182,6 +182,7 @@ class TransController extends MainController {
         //dd($data['data']);
         if($dat){
             $data['data'] = $dat;
+            $data['detail'] = json_encode(DB::table('details')->where('TransNo',$id)->get());
         } else {
             $data['data'] = [];
             $data['image'] = 'images/no-image.png';

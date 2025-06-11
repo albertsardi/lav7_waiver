@@ -51,6 +51,12 @@
                 <h3><i class="fa fa-check-square-o"></i> Detail</h3>
             </div>
             <div class="card-body">
+                <div class='row'>
+                    [form-input]
+                </div>
+                <div class='row'>
+                    <div id='grid'></div>
+                </div>
                 
             </div>
         </div><!-- end card-->
@@ -59,25 +65,24 @@
                     
 @section('js')
     <script>
+        //init Tabulator
+        var detail = {!! $detail !!}
+        var table = new Tabulator("#grid", {
+    data:detail, //set initial table data
+    columns:[
+        {title:"Product", field:"ProductCode"},
+        {title:"Name", field:"ProductName"},
+        {title:"Unit", field:"UOM"},
+        {title:"Qty", field:"Qty", editor:'input'},
+        {title:"Price", field:"Price"},
+        {title:"Disc %", field:"DiscPercentD"},
+        {title:"Amount", field:"Amount"},
+    ],
+});
         $(document).ready(function() {
             $(':input[type=number]').on('mousewheel',function(e){ $(this).blur();  });
             $.ajaxSetup({
                 async: false
-            });
-            
-            //load data
-            //loaddata(post);
-            //$.ajax({url: "http://localhost:8000/ajax_getProduct/C-11", 
-            $.ajax({url: "{{ url('ajax_getProduct') }}/{{$id}}", 
-                success: function(resp){
-                    var res=JSON.parse(resp); 
-                    //alert(res.status);
-                    res=res.data;
-                    //console.log(res);
-                    $.each(res, function( f, v ) {
-                        $("input[name='"+f+"']").val(v);
-                    })
-                }
             });
             
             /*var dataSource= "http://localhost:8000/ajax_getProduct/C-11";
