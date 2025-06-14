@@ -6,15 +6,15 @@
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
         <div class="card mb-3">
             <div class="card-header">
-                <h3><i class="fa fa-check-square-o"></i> Purchase</h3>
+                <h3><i class="fa fa-check-square-o"></i> Expense</h3>
             </div>
             <div class="card-body">
+                
                 {{ Form::setData($data) }} 
                 {{ Form::text('sid', 'TRans #', ['placeholder'=>'ID','readonly'=>'true']) }}
                 {{ Form::text('TransNo', 'Trans #', ['readonly'=>'true']) }}
                 {{ Form::text('TransDate', 'Date') }}
                 {{ Form::text('DoDate', 'DO Date') }}
-                {{ Form::combo('AccCode', 'Supplier', $mSupplier) }}
                 {{ Form::text('FromPO', 'From PO #') }}
                 {{ Form::text('FromInv', 'From Inv #') }}
                 {{-- {{ Form::combo('Warehouse', 'Warehouse', $mWarehouse) }} --}}
@@ -53,19 +53,14 @@
             </div>
             <div class="card-body">
                 <div class='row'>
-                    @php
-                        $label = ['Product', 'Unit', 'Qty', 'Price','Disc &'];
-                        $name = ['input-Product', 'input-Unit', 'input-Qty', 'input-Price','input-Disc'];
-                    @endphp
-                    @foreach($name as $idx=>$nm)
                         <div class="col">
-                            <label class='form-label'>{{$label[$idx]}}</label>    
-                            <input type="text" name="{{$nm}}" class="form-control" placeholder="First name" aria-label="First name">
+                            <label class='form-label'>First Name</label>    
+                            <input type="text" class="form-control" placeholder="First name" aria-label="First name">
                         </div>
-                    @endforeach
-                    <div class="col">
-                        <button id='btnAddItem' type='button' onclick='addItem()'>Add Item</button>
-                    </div>
+                        <div class="col">
+                            <label class='form-label'>Last Name</label>   
+                            <input type="text" class="form-control" placeholder="Last name" aria-label="Last name">
+                        </div>
                 </div>
                 <div class='row'>
                     <div id='grid'></div>
@@ -81,35 +76,12 @@
                     
 @section('js')
     <script>
-        //init button
-        function addItem(){
-            alert('add item')
-            let newItem = {
-                "TransNo":"PI.1800001",
-                "ProductCode":"new row",
-                "ProductName":"DMO 22 51959 NL POLOS",
-                "Qty":"150.00",
-                "UOM":"Pcs",
-                "Price":"10455.00",
-                "DiscPercentD":0,
-                "Cost":"10455.00",
-                "Memo":"",
-                "Sono":"",
-                "id":0,
-                "ProductType":0,
-                "Amount":1568250
-            }
-            detail.push(newItem);
-        }
         //init Tabulator
         var detail = {!! $detail !!}
         const detailData = document.getElementById("grid_data");
-        console.log(detail)
         detailData.value = JSON.stringify(detail)
         detailData.innerText = detail
         var table = new Tabulator("#grid", {
-            layout:"fitColumns",
-            reactiveData:true,
             data:detail, //set initial table data
             validationMode:"highlight",
             columns:[

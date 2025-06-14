@@ -25,34 +25,36 @@ class MasterController extends MainController {
 
     function datalist($jr) {
         // return 'datalist';
+        if (in_array($jr, ['purchase'])) return TransController::datalist($jr);
         $today = date('Y-m-d');
         //dump(session('user')->Token);
         //show view
         $out =[];
-        dump($jr);
+        //dump($jr);
         switch($jr) {
             case 'products':
                 //$res = Product::selectRaw('Code,Name,UOM,Category,ActiveProduct,id')->where('Token', session('user')->Token)->get();
-                $res = Product::get();
+                $res = Product::where('active',1)->get();
+                dump($res);
                 foreach($res as $r) {
                     //$r->Qty = DB::select(" CALL getProductQty('$r->Code','$today') ")[0]->Total ?? 0;
                     $out[]=[
-                        "<a href='".url('product/'.$r->id)."'>".$r->Code."</a>",
-                        $r->Name,
-                        $r->UOM,
-                        $r->Category,
-                        $r->ActiveProduct,
+                        "<a href='".url('edit/product/'.$r->id)."'>".$r->name."</a>",
+                        $r->unit,
+                        $this->getCatName($r->category_id,'product'),
+                        $r->active,
                         12345, //TODO get Qty
                     ];
                 }
+                // dd($out);
                 //dd($res);
                 $data = [
                     'jr'        => $jr,
                     'title'     => 'Products List',
-                    'gridhead'  => ['Product #','Product Name','Unit','Category','Active/not Active','Quantity'],
+                    'gridhead'  => ['Product Name','Unit','Category','Active/not Active','Quantity'],
                     '_url'      => env('API_URL').'/api/'.$jr,
                     // 'data'      => $this->db_query('masterproduct','Code,Name,UOM,Category,12345 as Qty'),
-                    'griddata'      => $out,
+                    'grid'      => $out,
                     'xxdatacol'   => json_encode([
                         [ 'data' => 'Code'],
                         [ 'data' => 'Name'],
@@ -79,7 +81,8 @@ class MasterController extends MainController {
                 $data = [
                     'jr'        => $jr,
                     'title'     => ucfirst($jr).' List',
-                    'gridhead'      => ['Display Name','Code','Phone','Email','Address', 'Status', 'Balance (Rp)'],
+                    'gridhead'  => ['Display Name','Code','Phone','Email','Address', 'Status', 'Balance (Rp)'],
+                    'grid'      => $out,
                     'caption'   => $this->makeCaption($jr),
                     '_url'      => env('API_URL').'/api/'.$jr,
                     'data'      => $res,
@@ -103,7 +106,8 @@ class MasterController extends MainController {
                 $data = [
                     'jr'        => $jr,
                     'title'     => ucfirst($jr).' List',
-                    'gridhead'      => ['Display Name','Code','Phone','Email','Address', 'Status', 'Balance (Rp)'],
+                    'gridhead'  => ['Display Name','Code','Phone','Email','Address', 'Status', 'Balance (Rp)'],
+                    'grid'      => $out,
                     'caption'   => $this->makeCaption($jr),
                     '_url'      => env('API_URL').'/api/'.$jr,
                     'data'      => $res,
@@ -117,7 +121,8 @@ class MasterController extends MainController {
                     }
                     $data = [
                         'jr'        => $jr,
-                        'grid'      => ['Account #','Account Name','Category','Amount (Rp)',' '],
+                        'gridhead'      => ['Account #','Account Name','Category','Amount (Rp)',' '],
+                        'grid'=> $out,
                         'caption'   => $this->makeCaption($jr),
                         '_url'      => env('API_URL').'/api/'.$jr,
                         'data'      => $res
@@ -130,7 +135,8 @@ class MasterController extends MainController {
                         }
                     $data = [
                         'jr'        => $jr,
-                        'grid'      => ['Bank Name', 'Bank Account#', 'Account#','Bank Type','Amount (Rp)', ' '],
+                        'gridhead'  => ['Bank Name', 'Bank Account#', 'Account#','Bank Type','Amount (Rp)', ' '],
+                        'grid'      => $out,
                         'caption'   => $this->makeCaption($jr),
                         '_url'      => env('API_URL').'/api/'.$jr,
                         'data'      => $dat
@@ -138,9 +144,9 @@ class MasterController extends MainController {
                     break;
                 }
 
-        $data['grid'] = $this->makeTable($out);
+        $data['grid'] = $this->makeTable($data['grid']);
         $data['gridhead'] = '<thead><tr><th>'.implode('</th><th>',$data['gridhead']).'</th></tr></thead>';
-        dump($data['grid']);
+        dump($data);
         //return $data;
         return view('datalist', $data);
     }
@@ -240,6 +246,7 @@ class MasterController extends MainController {
     }
     function store(Request $req){
         $save = $req->input();
+        if (in_array($save['formtype'],['purchase'])) return TransController::store($req);
         $save['CreatedBy'] = 'User';
         $jr = $save['formtype'];
         if(empty($save['sid'])) $save['sid'] = $this->createSID() ;
@@ -351,7 +358,6 @@ class MasterController extends MainController {
             for($a=0;$a<count($dat);$a++) {
                 $dat[$a]['AccNo']= link_to("accountdetail/".$dat[$a]['AccNo'], $dat[$a]['AccNo']);
             }
-            dd($dat);
             return $this->table_generate($dat,['Account #','Account Name','Category','Amount (Rp)']);
             break;
 
@@ -501,13 +507,9 @@ class MasterController extends MainController {
     function makeTable($data) {
         $out = '';
         $data=(array)$data;
-        //dd($data);
         foreach($data as $dt) {
-            //dd($dt);
             $dt = array_values((array)$dt);
-            //dd($dt);
             $row ='<tr><td>'. implode('</td><td>', $dt). '</td></tr>';
-            //dd($row);
             $out.=$row;
 
         }

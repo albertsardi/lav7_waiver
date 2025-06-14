@@ -25,7 +25,7 @@ use App\Http\Model\Invoice;
 use App\Http\Model\Salesman;
 use App\Http\Model\Order;
 use App\Http\Model\Product;
-use App\Http\Model\ProductCategory;
+use App\Http\Model\Category;
 use App\Http\Model\Warehouse;
 use Session;
 
@@ -169,6 +169,37 @@ public static function _api($api) {
 public static function xxx($api) {
 	echo 'xxxx';
 }
+
+public function getCatName($id, $cattype) {
+	$cat = DB::table('categories')->where('CatType', $cattype)->first();
+	if(empty($cat)) $this->generateCategory($cattype);
+	$cat = DB::table('categories')->where('id', $id)->first();
+
+	return $cat->Name ??'';
+}
+
+public function getSupplierName($id) {
+	$dat = DB::table('suppliers')->where('AccCode',$id)->first();
+
+	return $dat->AccName ??'';
+}
+
+function generateCategory($cattype) {
+	dump('generate product category');
+	$cat = [];
+	for($a=1;$a<=3;$a++) {
+		$cat = [
+			'Name'=> "Cat $a",
+			'CatType'=>$cattype,
+		];
+		//dump($cat);
+		$m = new Category();
+		$res = $m->create($cat);
+	}
+	dump('generate product category sucessfull.');
+	
+}
+	
 
 // function modalData($modal)
 // {
@@ -332,6 +363,31 @@ function selectData($arr) {
 
   function getTransStatus($id) {
     return "[NA]";
+  }
+
+  public function getOption($db, $fld, $where='') {
+        $out=[];
+        $dat = DB::table($db);
+        if($where<>'') $dat = $dat->whereRaw($where);
+        $dat = $dat->get($fld)->toArray();
+		foreach($dat as $d) {
+			$d = (array)$d;
+			$out[] = [ $d[$fld[0]], $d[$fld[1]] ];
+		}
+		return $out;
+  }
+
+  public function getTransNo($jr) {
+	$yr = substr(date('Y'),2);
+	switch($jr) {
+		case 'PI':
+			$dat  = DB::select("SELECT TransNo FROM purchase WHERE LEFT(TRansNo,5)='PI.18' ORDER BY TransNo DESC limit 1");
+			$lastno= intval(substr($dat[0]->TransNo,5));
+			$newno=$lastno+1;
+			return "PI.".$yr.str_pad($newno, 5, '0', STR_PAD_LEFT);
+			break;
+	}
+		
   }
 
   

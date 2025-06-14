@@ -20,7 +20,7 @@ Route::get('datalist/{jr}', 'MasterController@datalist');
 Route::get('accountdetail/{id}', 'TransController@accountdetail');
 
 //transList
-Route::get('list/{jr}', 'TransController@translist');
+Route::get('list/purchase', "TransController@listpurchase");
 
 
 
@@ -41,6 +41,7 @@ Route::get('logout', 'AppController@logout');
 //edit  trans
 // Route::get('edit/salesorder/{id?}', 'SalesController@dataedit');
 // Route::get('edit/purchase/{id?}', 'PurchaseController@dataedit');
+Route::get('edit/expense/{id?}', 'TransController@editExpense');
 
 //edit master & trans
 Route::get('edit/{jr}/{id?}', 'MasterController@dataedit');
@@ -51,6 +52,7 @@ Route::get('edit/{jr}/{id?}', 'MasterController@dataedit');
 //    Route::get('trans/{id}', 'TransController@transedit')->name('trans-edit');
 // });
 Route::post('datasave', 'MasterController@store');
+Route::post('transsave', 'TransController@store');
 
 //reportmaster
 Route::get('report/{id}', 'ReportController@makereport');

@@ -14,6 +14,7 @@ use App\Http\Model\Account;
 use App\Http\Model\Bank;
 use App\Http\Model\Order;
 use App\Http\Model\Purchase;
+use App\Http\Model\Expense;
 use App\report\MyReport;
 use \koolreport\widgets\koolphp\Table;
 use \koolreport\export\Exportable;
@@ -23,125 +24,33 @@ use Session;
 
 class TransController extends MainController {
 
-    function datalist($jr) {
-        // return 'datalist';
+    function listpurchase() {
+        $jr = 'purchase';
         $today = date('Y-m-d');
-        //dump(session('user')->Token);
-        //show view
         $out =[];
-        dump($jr);
-        switch($jr) {
-            case 'products':
-                //$res = Product::selectRaw('Code,Name,UOM,Category,ActiveProduct,id')->where('Token', session('user')->Token)->get();
-                $res = Product::get();
-                foreach($res as $r) {
-                    //$r->Qty = DB::select(" CALL getProductQty('$r->Code','$today') ")[0]->Total ?? 0;
-                    $out[]=[
-                        "<a href='".url('product/'.$r->id)."'>".$r->Code."</a>",
-                        $r->Name,
-                        $r->UOM,
-                        $r->Category,
-                        $r->ActiveProduct,
-                        12345, //TODO get Qty
-                    ];
-                }
-                //dd($res);
-                $data = [
-                    'jr'        => $jr,
-                    'title'     => 'Products List',
-                    'gridhead'  => ['Product #','Product Name','Unit','Category','Active/not Active','Quantity'],
-                    '_url'      => env('API_URL').'/api/'.$jr,
-                    // 'data'      => $this->db_query('masterproduct','Code,Name,UOM,Category,12345 as Qty'),
-                    'griddata'      => $out,
-                    'xxdatacol'   => json_encode([
-                        [ 'data' => 'Code'],
-                        [ 'data' => 'Name'],
-                        [ 'data' => 'UOM'],
-                        [ 'data' => 'Category']
-                    ])
-                ];
-                //dd($data);
-                break;
-            case 'suppliers':
-                $res = Supplier::get();
-                //dd($res);
-                foreach($res as $r) {
-                    $out[]=[
-                        "<a href='".url('edit/supplier/'.$r->id)."'>".$r->AccCode."</a>",
-                        $r->AccName,
-                        $r->Phone,
-                        $r->email,
-                        $r->Address,
-                        $r->Active,
-                        rand(1000,2000)*1000, //TODO get Balance
-                    ];
-                }
-                $data = [
-                    'jr'        => $jr,
-                    'title'     => ucfirst($jr).' List',
-                    'gridhead'      => ['Display Name','Code','Phone','Email','Address', 'Status', 'Balance (Rp)'],
-                    'caption'   => $this->makeCaption($jr),
-                    '_url'      => env('API_URL').'/api/'.$jr,
-                    'data'      => $res,
-                ];
-                break;
-            case 'customers':
-                $res = Customer::get();
-                //dd($res);
-                foreach($res as $r) {
-                    $r->Bal = rand(1000,2000)*1000; //TODO
-                }
-                $out[]=[
-                    "<a href='".url('customer/'.$r->id)."'>".$r->AccCode."</a>",
-                    $r->AccName,
-                    $r->Phone,
-                    $r->email,
-                    $r->Address,
-                    $r->Active,
-                    rand(1000,2000)*1000, //TODO get Balance
-                ];
-                $data = [
-                    'jr'        => $jr,
-                    'title'     => ucfirst($jr).' List',
-                    'gridhead'      => ['Display Name','Code','Phone','Email','Address', 'Status', 'Balance (Rp)'],
-                    'caption'   => $this->makeCaption($jr),
-                    '_url'      => env('API_URL').'/api/'.$jr,
-                    'data'      => $res,
-                ];
-                break;
-                case 'coa':
-                    //$res = DB::table('mastercoa')->selectRaw('AccNo, AccName, CatName, 123456 as Bal,id')->get();
-                    $res= Account::Get()->data;
-                    foreach($res as $r) {
-                        $r->Bal = DB::select(" CALL getAccountAmount('".Session::get('Token')."','$r->id','$today') ")[0]->Total ?? 0;;
-                    }
-                    $data = [
-                        'jr'        => $jr,
-                        'grid'      => ['Account #','Account Name','Category','Amount (Rp)',' '],
-                        'caption'   => $this->makeCaption($jr),
-                        '_url'      => env('API_URL').'/api/'.$jr,
-                        'data'      => $res
-                    ];
-                    break;
-                case 'banks':
-                    $dat =  DB::table('masterbank')->selectRaw('BankAccName, BankAccNo, AccNo, BankType, 1234567 as Bal,id')->get();
-                    foreach($dat as $dt) {
-                        $dt->Bal = Account::getAmount($dt->id);
-                        }
-                    $data = [
-                        'jr'        => $jr,
-                        'grid'      => ['Bank Name', 'Bank Account#', 'Account#','Bank Type','Amount (Rp)', ' '],
-                        'caption'   => $this->makeCaption($jr),
-                        '_url'      => env('API_URL').'/api/'.$jr,
-                        'data'      => $dat
-                    ];
-                    break;
-                }
+        //$res = Purchase::where('active',1)->get();
+        $res = Purchase::all();
+        foreach($res as $r) {
+            $out[]=[
+                "<a href='".url("edit/$jr/".$r->TransNo)."'>".$r->TransNo."</a>",
+                $r->TransDate,
+                $this->getSupplierName($r->AccCode),
+                $r->active,
+                'Rp. '.number_format($r->Total,2), //TODO get Qty
+            ];
+        }
+        $data = [
+            'jr'        => $jr,
+            'title'     => ucfirst($jr).' List',
+            'gridhead'  => ['Purchase #','Date','Supplier','Status','Total'],
+            '_url'      => env('API_URL').'/api/'.'purchase',
+            // 'data'      => $this->db_query('masterproduct','Code,Name,UOM,Category,12345 as Qty'),
+            'grid'      => $out,
+        ];
+                
 
-        $data['grid'] = $this->makeTable($out);
+        $data['grid'] = $this->makeTable($data['grid']);
         $data['gridhead'] = '<thead><tr><th>'.implode('</th><th>',$data['gridhead']).'</th></tr></thead>';
-        dump($data['grid']);
-        //return $data;
         return view('datalist', $data);
     }
 
@@ -164,25 +73,26 @@ class TransController extends MainController {
         // return 'edit purchase '.$id;
         $data =[];
         $data['id'] = $id;
-        $data['jr'] = 'product';
-        $data['mCat'] = [
-            [1, 'cat1'],
-            [2, 'cat2'],
-        ];
-        $data['mType'] = [
-            [1, 'type1'],
-            [2, 'type2'],
-        ];
-        $data['mHpp'] = [
-            [1, 'hpp1'],
-            [2, 'hpp2'],
-        ];
+        $data['jr'] = 'purchase';
+        $data['mSupplier'] = MainController::getOption('suppliers',['AccCode','AccName'], "Active='1' ");
         $dat = Purchase::find($id);
-        //return dd($dat);
-        //dd($data['data']);
+        $total = [];
         if($dat){
             $data['data'] = $dat;
-            $data['detail'] = json_encode(DB::table('details')->where('TransNo',$id)->get());
+            $detail = (DB::table('details')->where('TransNo',$id)->get());
+            $subtot = 0;
+            foreach($detail as $d) {
+                $d->Amount = floatval($d->Price) * abs(floatval($d->Qty));
+                $subtot += floatval($d->Amount);
+            }
+            $data['detail'] = json_encode($detail);
+            $data['total'] = [
+                'subtotal' => $subtot,
+                'disc'     => $dat->DiscAmountH,
+                'freight'  => $dat->FreightAmountH,
+                'tax'      => $dat->TaxAmount,
+                'total'    => $subtot-$dat->DiscAmountH+$dat->FreightAmountH+$dat->TaxAmount,
+            ];
         } else {
             $data['data'] = [];
             $data['image'] = 'images/no-image.png';
@@ -193,26 +103,47 @@ class TransController extends MainController {
 
     }
 
-    function editCustomer($id){
+    function editExpense($id=''){
+        // return 'edit purchase '.$id;
         $data =[];
-        $data['jr'] = 'customer';
         $data['id'] = $id;
-        $data['CreatedBy'] = 'User';
-        $data['mCat'] = [
-            [1, 'cat1'],
-            [2, 'cat2'],
-        ];
-        $data['mType'] = [
-            [1, 'type1'],
-            [2, 'type2'],
-        ];
-        $data['mHpp'] = [
-            [1, 'hpp1'],
-            [2, 'hpp2'],
-        ];
-        $data['data'] = Customer::find($id);
+        $data['jr'] = 'expense';
+        $data['mSupplier'] = MainController::getOption('suppliers',['AccCode','AccName'], "Active='1' ");
+        $dat = Expense::find($id);
+        $total = [];
+        if($dat){
+            $data['data'] = $dat;
+            $detail = (DB::table('details')->where('TransNo',$id)->get());
+            $subtot = 0;
+            foreach($detail as $d) {
+                $d->Amount = floatval($d->Price) * abs(floatval($d->Qty));
+                $subtot += floatval($d->Amount);
+            }
+            $data['detail'] = json_encode($detail);
+            $data['total'] = [
+                'subtotal' => $subtot,
+                'disc'     => $dat->DiscAmountH,
+                'freight'  => $dat->FreightAmountH,
+                'tax'      => $dat->TaxAmount,
+                'total'    => $subtot-$dat->DiscAmountH+$dat->FreightAmountH+$dat->TaxAmount,
+            ];
+        } else {
+            $data['data'] = [];
+            $data['image'] = 'images/no-image.png';
+            $detail = [];
+            $subtot = 0;
+            $data['detail'] = json_encode($detail);
+            $data['total'] = [
+                'subtotal' => $subtot??0,
+                'disc'     => $dat->DiscAmountH??0,
+                'freight'  => $dat->FreightAmountH??0,
+                'tax'      => $dat->TaxAmount??0,
+                'total'    => 0,
+            ];
+        }
+        
         dump($data);
-        return view('form-customer', $data);
+        return view('expense.form', $data);
     }
 
     function editSupplier($id){
@@ -234,23 +165,28 @@ class TransController extends MainController {
         
         $data['data'] = Supplier::find($id);
         dump($data);
-        return view('form-supplier', $data);
+        return view('expense.form', $data);
     }
     function store(Request $req){
+        session_start();
         $save = $req->input();
-        $save['CreatedBy'] = 'User';
+        $detail = json_decode($save['detail']);
+        $user = Session::get('user')??'no user';
+        $user = $req->session()->get('user');
+        // return dd($req);
+        $save['CreatedBy'] = $user;
+        $supplier = Supplier::where('AccCode',$save['AccCode'])->first();
+        $save['AccName'] = $supplier->AccName??'';
         $jr = $save['formtype'];
         if(empty($save['sid'])) $save['sid'] = $this->createSID() ;
         //return ($save);
+        $no = $this->getTransNo('PI');
 
         if(!empty($save['id'])) {
             //update
-            if($jr=='product') $data = Product::find($save['id']);
-            if($jr=='customer') $data = Customer::find($save['id']);
-            if($jr=='supplier') $data = Supplier::find($save['id']);
-            //return dd([$jr,$data]);
+            if($jr=='purchase') $data = Purchase::find($save['id']);
+            return dd($save);
             $res=$data->update($save);
-            //return dd($res);
             if ($res) { //save OK
                 return redirect::to(url("edit/$jr/".$save['id']))->with('saveOK','Save sucessfull');
             } else {
@@ -265,10 +201,8 @@ class TransController extends MainController {
             if($save['formtype']=='supplier') $data = new Supplier();
             if(is_null($data)) return dd('Error !!! formType not found');
 
-            if (empty($save['sid'])) $save['sid'] = 'SIDNO';
-            //return dd($save);
+            if (empty($save['TransNo'])) $save['TransNo'] = $this->getTransNo('PI');
             $res = $data->create($save);
-            //dd($res->id);
             $lastID = $res->id; //get last save id
 
             if ($res) { //save OK
@@ -349,7 +283,6 @@ class TransController extends MainController {
             for($a=0;$a<count($dat);$a++) {
                 $dat[$a]['AccNo']= link_to("accountdetail/".$dat[$a]['AccNo'], $dat[$a]['AccNo']);
             }
-            dd($dat);
             return $this->table_generate($dat,['Account #','Account Name','Category','Amount (Rp)']);
             break;
 
@@ -385,7 +318,6 @@ class TransController extends MainController {
         $report = new MyReport;
         $prodData = DB::table('masterproduct')->selectRaw('Code,Name,UOM,Category,1234567 as Qty,id')->get();
         //$prodData = $this->db_query('transhead');
-        //return dd($prodData);
         $report->rdata['data'] = $prodData;
         return $report->run()->exportToExcel($excelPath.'report_excel')->toBrowser("myreport.xlsx");
         /*$dat = [ "dataStores" => array(
@@ -499,13 +431,9 @@ class TransController extends MainController {
     function makeTable($data) {
         $out = '';
         $data=(array)$data;
-        //dd($data);
         foreach($data as $dt) {
-            //dd($dt);
             $dt = array_values((array)$dt);
-            //dd($dt);
             $row ='<tr><td>'. implode('</td><td>', $dt). '</td></tr>';
-            //dd($row);
             $out.=$row;
 
         }
@@ -528,7 +456,6 @@ class TransController extends MainController {
             $char[] = (string)$a;
         }
         $char[] = '0';
-        //return dd($char);
         $out='';
         for($a=1;$a<=6;$a++){
             $out.=$char[rand(0,35)];

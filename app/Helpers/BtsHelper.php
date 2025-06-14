@@ -136,6 +136,7 @@ class Form
 	}
 	public static function combo($name, $label, $list = [], $other = [], $other2 = []) {
 		$value = self::$form_data[$name]??'';
+		$value = self::$form_data[$name]??'';
 		if (!empty($other2)) $other = $other2;
 
 		$v= '';
@@ -144,7 +145,7 @@ class Form
 			foreach($list as $ls){
 				$v1 = $ls[0]; //dd($v1);
 				$v2 = $ls[1]; //dd($v2);
-				if ($v == $v1) {
+				if ($value == $v1) {
 					$slist .= "<option value='$v1' selected>" . $v2 . "</option>";
 				} else {
 					$slist .= "<option value='$v1'>" . $v2 . "</option>";

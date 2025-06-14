@@ -64,10 +64,14 @@
             </div>
             @endif
 			<div class="alert alert-success invisible" role="alert">
-				<h5>Data Product saved.</h5>
+				<h5>Data {{ ucfirst($jr) }} saved.</h5>
 			</div>
             <div id='result'></div>
-            <form action="{{  url('datasave') }}" method="post">
+            @if(in_array($jr,['product','customer','supplier']))
+                <form action="{{  url('datasave') }}" method="post">
+            @else
+                <form action="{{  url('transsave') }}" method="post">
+            @endif
             @csrf
                 <!-- panel button -->
                 <div class="card card-body mb-2">
