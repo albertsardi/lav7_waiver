@@ -108,7 +108,6 @@
         detailData.value = JSON.stringify(detail)
         detailData.innerText = detail
         var table = new Tabulator("#grid", {
-            layout:"fitColumns",
             reactiveData:true,
             data:detail, //set initial table data
             validationMode:"highlight",
