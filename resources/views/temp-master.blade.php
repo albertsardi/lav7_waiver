@@ -4,6 +4,8 @@
 <title>Allegro - ERP System Administrator</title>
 <meta name="description" content="Allegro - ERP System Administrtor">
 <meta name="author" content="Albert - (c)ASAfoodenesia">
+<!-- Svelte -->
+ <script src=" https://cdn.jsdelivr.net/npm/svelte@5.34.3/src/index-client.min.js "></script>
 
 <html lang="en">
 <head>
@@ -129,6 +131,7 @@
 <script src="{{ asset('js/bootbox.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
 <script src="{{ asset('js/fastclick.js') }}" type="text/javascript"></script>
+
 
 {{-- <script src="{{ asset('assets/js/helper_metroform.js') }}" type="text/javascript"></script> --}}
 

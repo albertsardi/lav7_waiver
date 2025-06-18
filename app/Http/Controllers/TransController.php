@@ -35,7 +35,7 @@ class TransController extends MainController {
                 "<a href='".url("edit/$jr/".$r->TransNo)."'>".$r->TransNo."</a>",
                 $r->TransDate,
                 $this->getSupplierName($r->AccCode),
-                $r->active,
+                $this->getStatus($r),
                 'Rp. '.number_format($r->Total,2), //TODO get Qty
             ];
         }
@@ -75,6 +75,7 @@ class TransController extends MainController {
         $data['id'] = $id;
         $data['jr'] = 'purchase';
         $data['mSupplier'] = MainController::getOption('suppliers',['AccCode','AccName'], "Active='1' ");
+        $data['mProduct'] = MainController::getOption('products',['id','name'], "active='1' ") ;
         $dat = Purchase::find($id);
         $total = [];
         if($dat){
@@ -145,6 +146,10 @@ class TransController extends MainController {
         dump($data);
         return view('expense.form', $data);
     }
+
+function getStatus($dat) {
+    if($dat->Status==1) return "<span class='text-success'>Sent</span>";
+}
 
     function editSupplier($id){
         $data =[];

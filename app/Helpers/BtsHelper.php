@@ -152,7 +152,7 @@ class Form
 				}
 			}
 		}
-		$input = "<select name='$name' class='form-control'>
+		$input = "<select name='$name' id='$name' class='form-control'>
 					$slist
 				</select>";
 
