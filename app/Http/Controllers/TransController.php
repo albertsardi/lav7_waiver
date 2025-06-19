@@ -15,6 +15,7 @@ use App\Http\Model\Bank;
 use App\Http\Model\Order;
 use App\Http\Model\Purchase;
 use App\Http\Model\Expense;
+use App\Http\Model\Detail;
 use App\report\MyReport;
 use \koolreport\widgets\koolphp\Table;
 use \koolreport\export\Exportable;
@@ -54,11 +55,44 @@ class TransController extends MainController {
         return view('datalist', $data);
     }
 
+    function listexpense() {
+        $jr = 'expense';
+        $today = date('Y-m-d');
+        $out =[];
+        $res = Expense::whereRaw("Amount>0")->distinct()->get();
+        dump($res);
+        foreach($res as $r) {
+            $out[]=[
+                "<a href='".url("edit/$jr/".$r->ReffNo)."'>".$r->ReffNo."</a>",
+                $r->JRdate,
+                $r->ExpCategory??'',
+                $this->getStatus($r),
+                'Rp. '.number_format($r->Amount,2), //TODO get Qty
+            ];
+        }
+        $data = [
+            'jr'        => $jr,
+            'title'     => ucfirst($jr).' List',
+            'gridhead'  => ['Expense #','Date','Expense Category','Status','Total'],
+            '_url'      => env('API_URL').'/api/'.'purchase',
+            // 'data'      => $this->db_query('masterproduct','Code,Name,UOM,Category,12345 as Qty'),
+            'grid'      => $out,
+        ];
+                
+
+        $data['grid'] = $this->makeTable($data['grid']);
+        $data['gridhead'] = '<thead><tr><th>'.implode('</th><th>',$data['gridhead']).'</th></tr></thead>';
+        return view('datalist', $data);
+    }
+
     function dataedit($jr,$id='') {
         //return $jr.$id;
         switch($jr) {
             case 'purchase':
                 return $this->editPurchase($id);
+            break;
+            case 'expense':
+                return $this->editExpense($id);
             break;
             case 'customer':
                 return $this->editCustomer($id);
@@ -105,12 +139,12 @@ class TransController extends MainController {
     }
 
     function editExpense($id=''){
-        // return 'edit purchase '.$id;
+        // return 'edit expense '.$id;
         $data =[];
         $data['id'] = $id;
         $data['jr'] = 'expense';
-        $data['mSupplier'] = MainController::getOption('suppliers',['AccCode','AccName'], "Active='1' ");
-        $dat = Expense::find($id);
+        $data['mCat'] = MainController::getOption('categories',['id','Name'], "CatType='expense' ");
+        $dat = Expense::whereRaw("Amount>0 and TransNo='$id' ")->first();
         $total = [];
         if($dat){
             $data['data'] = $dat;
@@ -131,20 +165,11 @@ class TransController extends MainController {
         } else {
             $data['data'] = [];
             $data['image'] = 'images/no-image.png';
-            $detail = [];
-            $subtot = 0;
-            $data['detail'] = json_encode($detail);
-            $data['total'] = [
-                'subtotal' => $subtot??0,
-                'disc'     => $dat->DiscAmountH??0,
-                'freight'  => $dat->FreightAmountH??0,
-                'tax'      => $dat->TaxAmount??0,
-                'total'    => 0,
-            ];
         }
         
         dump($data);
         return view('expense.form', $data);
+
     }
 
 function getStatus($dat) {
@@ -172,26 +197,44 @@ function getStatus($dat) {
         dump($data);
         return view('expense.form', $data);
     }
+    
     function store(Request $req){
+        $save = $req->input();
+        $jr = $save['formtype'];
+        if($jr=='purchase') return $this->storePurchase($req);
+        if($jr=='expense') return $this->storeExpense($req);
+    }
+    function storePurcase(Request $req){
         session_start();
         $save = $req->input();
-        $detail = json_decode($save['detail']);
+        $jr = $save['formtype'];
+        
+        //return dd($detail);
         $user = Session::get('user')??'no user';
         $user = $req->session()->get('user');
-        // return dd($req);
         $save['CreatedBy'] = $user;
-        $supplier = Supplier::where('AccCode',$save['AccCode'])->first();
-        $save['AccName'] = $supplier->AccName??'';
-        $jr = $save['formtype'];
+        if($jr=='purchase') {
+            $supplier = Supplier::where('AccCode',$save['AccCode'])->first();
+            $save['AccName'] = $supplier->AccName??'';
+        }
         if(empty($save['sid'])) $save['sid'] = $this->createSID() ;
-        //return ($save);
-        $no = $this->getTransNo('PI');
+        //return dd($save);
 
         if(!empty($save['id'])) {
             //update
             if($jr=='purchase') $data = Purchase::find($save['id']);
-            return dd($save);
+            if($jr=='expense') $data = Expense::find($save['id']);
             $res=$data->update($save);
+            //save detail
+            if(isset($save['detail'])) { //if has detail save detail
+                $detail = json_decode($save['detail']);
+                DB::Table('details')->where('TransNo',$save['id'])->delete();
+                foreach($detail as $d){
+                    $data = new Detail();
+                    $d = (array)$d;
+                    $r = $data->create($d); 
+                }
+            }
             if ($res) { //save OK
                 return redirect::to(url("edit/$jr/".$save['id']))->with('saveOK','Save sucessfull');
             } else {
@@ -200,20 +243,66 @@ function getStatus($dat) {
 
         } else {
             // create new
+            if($jr=='purchase') $no = $this->getTransNo('PI');
+            if($jr=='expense') $no = $this->getTransNo('EX');
             $data = null;
             if($save['formtype']=='product') $data = new Product();
             if($save['formtype']=='customer') $data = new Customer();
             if($save['formtype']=='supplier') $data = new Supplier();
+            if($save['formtype']=='expense') $data = new Expense();
             if(is_null($data)) return dd('Error !!! formType not found');
 
             if (empty($save['TransNo'])) $save['TransNo'] = $this->getTransNo('PI');
+            if (empty($save['ReffNo'])) $save['ReffNo'] = $this->getTransNo('EX');
+            //return dd($save);
             $res = $data->create($save);
+            //return dd($res);
             $lastID = $res->id; //get last save id
+            //return dd($res);
 
             if ($res) { //save OK
                 return redirect::to(url("edit/$jr/$lastID"))->with('saveOK','Save sucessfull');
             } else {
                 return redirect::to(url("edit/$jr/$LastID"))->with('saveError',json_encode($res));
+            }
+        }
+        
+    }
+    function storeExpense(Request $req){
+        session_start();
+        $save = $req->input();
+        $jr = $save['formtype'];
+        
+        //return dd($detail);
+        $user = Session::get('user')??'no user';
+        $user = $req->session()->get('user');
+        $save['CreatedBy'] = $user;
+        if(empty($save['sid'])) $save['sid'] = $this->createSID() ;
+        //return dd($save);
+
+        if(!empty($save['ReffNo'])) {
+            //update
+            $data = Expense::find($save['id']);
+            $res = $data->update($save);
+            if ($res) { //save OK
+                return redirect::to(url("edit/$jr/".$save['id']))->with('saveOK','Save sucessfull');
+            } else {
+                return redirect::to(url("edit/$jr/".$save['id']))->with('saveError',json_encode($res));
+            }
+        } else {
+            // create new
+            $data = new Expense();
+            //return dd($save);
+            $save['TransNo'] = $this->getTransNo('EX');
+            $res = $data->create($save);
+            //return dd($res);
+            $lastID = $res->TransNo; //get last save id
+            //return dd($res);
+
+            if ($res) { //save OK
+                return redirect::to(url("edit/expense/$lastID"))->with('saveOK','Save sucessfull');
+            } else {
+                return redirect::to(url("edit/expense/$LastID"))->with('saveError',json_encode($res));
             }
         }
         

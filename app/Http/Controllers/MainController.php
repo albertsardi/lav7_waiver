@@ -381,13 +381,18 @@ function selectData($arr) {
 	$yr = substr(date('Y'),2);
 	switch($jr) {
 		case 'PI':
-			$dat  = DB::select("SELECT TransNo FROM purchase WHERE LEFT(TRansNo,5)='PI.18' ORDER BY TransNo DESC limit 1");
+			$dat  = DB::select("SELECT TransNo FROM purchase WHERE LEFT(TransNo,5)='$jr.18' ORDER BY TransNo DESC limit 1");
 			$lastno= intval(substr($dat[0]->TransNo,5));
 			$newno=$lastno+1;
-			return "PI.".$yr.str_pad($newno, 5, '0', STR_PAD_LEFT);
+			return $jr.$yr.str_pad($newno, 5, '0', STR_PAD_LEFT);
 			break;
-	}
-		
+		case 'EX':
+			$dat  = DB::select("SELECT TransNo FROM expenses WHERE LEFT(TransNo,5)='$jr.$yr' ORDER BY TransNo DESC limit 1");
+			$lastno= intval(substr($dat[0]->TransNo,5));
+			$newno=$lastno+1;
+			return $jr.$yr.str_pad($newno, 5, '0', STR_PAD_LEFT);
+			break;
+  	}
   }
 
   

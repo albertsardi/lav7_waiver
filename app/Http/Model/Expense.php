@@ -9,6 +9,11 @@ use Session;
 class Expense extends Model
 {
   protected $table = 'expenses';
+  public $timestamps = false;
+  protected $primaryKey = 'ReffNo';
+  protected $keyType = 'string';
+  protected $fillable = ['JRdate','AccNo','ExpCategory','Amount','JRdesc','TransNo','AccCode','Receiver'];
+
 
   
 
