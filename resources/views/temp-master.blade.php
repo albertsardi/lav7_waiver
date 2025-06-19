@@ -4,8 +4,8 @@
 <title>Allegro - ERP System Administrator</title>
 <meta name="description" content="Allegro - ERP System Administrtor">
 <meta name="author" content="Albert - (c)ASAfoodenesia">
-<!-- Svelte -->
- <script src=" https://cdn.jsdelivr.net/npm/svelte@5.34.3/src/index-client.min.js "></script>
+<!-- ApineJS -->
+ <script src="//unpkg.com/alpinejs" defer></script>
 
 <html lang="en">
 <head>
@@ -44,7 +44,7 @@
 			     <div class="row">
 					<div class="col-xl-12">
                         <div class="breadcrumb-holder">
-                            <h1 class="main-title float-left">Product Data {{ $jr }}</h1>
+                            <h1 class="main-title float-left">{{ ucfirst($jr) }} Data</h1>
                             <ol class="breadcrumb float-right">
                                 <li class="breadcrumb-item">Home</li>
                                 <li class="breadcrumb-item active">Forms</li>
@@ -81,6 +81,12 @@
 					<div class="col-sm-10">
 				  		<button id='cmSave' type="submit" class="btn btn-primary">Save</button>
 			  			<button id='cmPrint' type="submit" class="btn btn-primary">Print</button>
+                        <div x-data="{ open: false }">
+                            <button type='button' @click="open = true">Expand</button>
+                            <span x-show="open">
+                                Content...
+                            </span>
+                        </div>
 					</div>
 			  	</div>
 			</div>
