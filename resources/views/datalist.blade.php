@@ -1,6 +1,7 @@
 <x-mainlayout>
     
     <div id="main">
+        
 
         <!-- top bar navigation -->
         <x-topmenu />
@@ -17,6 +18,7 @@
             <div class="content">
                 
                 <div class="container-fluid">
+                    
                                 
                     <div class="row">
                             <div class="col-xl-12">
@@ -37,6 +39,10 @@
                                 <div class="card mb-3">
                                     <div class="card-header">
                                         <h3><i class="fa fa-table"></i> {{ucfirst($jr)??'Data'}} list</h3>
+                                        <div x-data="{ count: 0 }">
+                                            <button @click="count++;console.log(count)">Add</button>
+                                            <span x-text="count" style="color:white;background-color:black"></span>
+                                        </div>
                                     </div>
                                         
                                     <div class="card-body">

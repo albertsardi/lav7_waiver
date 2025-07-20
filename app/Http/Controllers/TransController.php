@@ -14,7 +14,9 @@ use App\Http\Model\Account;
 use App\Http\Model\Bank;
 use App\Http\Model\Order;
 use App\Http\Model\Purchase;
+use App\Http\Model\Salesorder;
 use App\Http\Model\Expense;
+use App\Http\Model\Detail;
 use App\report\MyReport;
 use \koolreport\widgets\koolphp\Table;
 use \koolreport\export\Exportable;
@@ -54,11 +56,74 @@ class TransController extends MainController {
         return view('datalist', $data);
     }
 
+    function listexpense() {
+        $jr = 'expense';
+        $today = date('Y-m-d');
+        $out =[];
+        //$res = Purchase::where('active',1)->get();
+        $res = Expense::whereRaw("Amount>0")->distinct()->get();
+        dump($res);
+        foreach($res as $r) {
+            $out[]=[
+                "<a href='".url("edit/$jr/".$r->ReffNo)."'>".$r->ReffNo."</a>",
+                $r->JRdate,
+                $r->ExpCategory??'',
+                $this->getStatus($r),
+                'Rp. '.number_format($r->Amount,2), //TODO get Qty
+            ];
+        }
+        $data = [
+            'jr'        => $jr,
+            'title'     => ucfirst($jr).' List',
+            'gridhead'  => ['Expense #','Date','Expense Category','Status','Total'],
+            // '_url'      => env('API_URL').'/api/'.'purchase',
+            // 'data'      => $this->db_query('masterproduct','Code,Name,UOM,Category,12345 as Qty'),
+            'grid'      => $out,
+        ];
+                
+
+        $data['grid'] = $this->makeTable($data['grid']);
+        $data['gridhead'] = '<thead><tr><th>'.implode('</th><th>',$data['gridhead']).'</th></tr></thead>';
+        return view('datalist', $data);
+    }
+
+    function listsalesorder() {
+        $jr = 'SO';
+        $today = date('Y-m-d');
+        $out =[];
+        $res = SalesOrder::get();
+        foreach($res as $r) {
+            $out[]=[
+                "<a href='".url("edit/$jr/".$r->TransNo)."'>".$r->TransNo."</a>",
+                $r->TransDate,
+                $r->AccName??'',
+                $this->getStatus($r),
+                'Rp. '.number_format($r->Total,2), //TODO get Qty
+            ];
+        }
+        $data = [
+            'jr'        => $jr,
+            'title'     => ucfirst($jr).' List',
+            'gridhead'  => ['Expense #','Date','Expense Category','Status','Total'],
+            '_url'      => env('API_URL').'/api/'.'purchase',
+            // 'data'      => $this->db_query('masterproduct','Code,Name,UOM,Category,12345 as Qty'),
+            'grid'      => $this->create_table($out, ['Order #','Date','Customer','Status','Total']),
+        ];
+                
+
+        $data['grid'] = $this->makeTable($data['grid']);
+        $data['gridhead'] = '<thead><tr><th>'.implode('</th><th>',$data['gridhead']).'</th></tr></thead>';
+        return view('salesorder.list', $data);
+    }
+
     function dataedit($jr,$id='') {
         //return $jr.$id;
         switch($jr) {
             case 'purchase':
                 return $this->editPurchase($id);
+            break;
+            case 'expense':
+                return $this->editExpense($id);
             break;
             case 'customer':
                 return $this->editCustomer($id);
@@ -105,12 +170,12 @@ class TransController extends MainController {
     }
 
     function editExpense($id=''){
-        // return 'edit purchase '.$id;
+        // return 'edit expense '.$id;
         $data =[];
         $data['id'] = $id;
         $data['jr'] = 'expense';
-        $data['mSupplier'] = MainController::getOption('suppliers',['AccCode','AccName'], "Active='1' ");
-        $dat = Expense::find($id);
+        $data['mCat'] = MainController::getOption('categories',['id','Name'], "CatType='expense' ");
+        $dat = Expense::whereRaw("Amount>0 and ReffNo='$id' ")->first();
         $total = [];
         if($dat){
             $data['data'] = $dat;
@@ -131,24 +196,46 @@ class TransController extends MainController {
         } else {
             $data['data'] = [];
             $data['image'] = 'images/no-image.png';
-            $detail = [];
-            $subtot = 0;
-            $data['detail'] = json_encode($detail);
-            $data['total'] = [
-                'subtotal' => $subtot??0,
-                'disc'     => $dat->DiscAmountH??0,
-                'freight'  => $dat->FreightAmountH??0,
-                'tax'      => $dat->TaxAmount??0,
-                'total'    => 0,
-            ];
         }
         
         dump($data);
         return view('expense.form', $data);
+
     }
 
 function getStatus($dat) {
     if($dat->Status==1) return "<span class='text-success'>Sent</span>";
+    return "<span class='text-primary'>Draft</span>";
+}
+
+function salesview($id) {
+    $data =[];
+    $data['mSupplier'] = [
+        [1, 'hpp1'],
+        [2, 'hpp2'],
+    ];
+    $data['mProduct'] = DB::Table('products')->where('active', 1)->orderBy('id')->get(['sid','name']);
+    $data['detail'] = DB::table('details')->where('TransNo','PI.1800010')->orderBy('id')->get();
+    
+    $data['data'] = Supplier::find($id);
+    dump($data);
+    return view('salesorder.form', $data);
+}
+
+function salesedit($id) {
+    $data =[];
+    $data['jr'] = 'SO';
+    $data['id'] = $id;
+    $data['mSupplier'] = [
+        [1, 'hpp1'],
+        [2, 'hpp2'],
+    ];
+    $data['mProduct'] = MainController::getOption('products',['id','name'], "active='1' ") ;
+    $data['detail'] = DB::table('details')->where('TransNo','PI.1800010')->orderBy('id')->get();
+    
+    $data['data'] = Supplier::find($id);
+    dump($data);
+    return view('salesorder.form', $data);
 }
 
     function editSupplier($id){
@@ -175,14 +262,14 @@ function getStatus($dat) {
     function store(Request $req){
         session_start();
         $save = $req->input();
+        $jr = $save['formtype'];
         $detail = json_decode($save['detail']);
+        //return dd($detail);
         $user = Session::get('user')??'no user';
         $user = $req->session()->get('user');
-        // return dd($req);
         $save['CreatedBy'] = $user;
         $supplier = Supplier::where('AccCode',$save['AccCode'])->first();
         $save['AccName'] = $supplier->AccName??'';
-        $jr = $save['formtype'];
         if(empty($save['sid'])) $save['sid'] = $this->createSID() ;
         //return ($save);
         $no = $this->getTransNo('PI');
@@ -190,8 +277,15 @@ function getStatus($dat) {
         if(!empty($save['id'])) {
             //update
             if($jr=='purchase') $data = Purchase::find($save['id']);
-            return dd($save);
+            //return dd($save);
             $res=$data->update($save);
+            //save detail
+            DB::Table('details')->where('TRansNo',$save['id'])->delete();
+            foreach($detail as $d){
+                $data = new Detail();
+                $d = (array)$d;
+                $r = $data->create($d); 
+            }
             if ($res) { //save OK
                 return redirect::to(url("edit/$jr/".$save['id']))->with('saveOK','Save sucessfull');
             } else {

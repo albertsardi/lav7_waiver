@@ -126,21 +126,8 @@
 									All expenses in year period sorted by bigger expense on the top ad lesser on bottom.
 							</div>
 							<div class="card-body">
-								<table id="example1" class="table table-bordered table-responsive-xl table-hover display">
-									<thead>
-										<tr>
-											<th>Name</th>
-											<th>Position</th>
-											<th>Office</th>
-											<th>Age</th>
-											<th>Start date</th>
-											<th>Salary</th>
-										</tr>
-									</thead>													
-									<tbody>
-										{!! $tableExpense !!}
-									</tbody>
-								</table>
+								{!! $tableExpense !!}
+								
 							</div>														
 						</div><!-- end card-->					
 					</div>

@@ -7,6 +7,9 @@
 <!-- Svelte -->
  <script src=" https://cdn.jsdelivr.net/npm/svelte@5.34.3/src/index-client.min.js "></script>
 
+<!-- select2 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <html lang="en">
 <head>
     <!-- BEGIN CSS for this page -->
@@ -124,19 +127,22 @@
 <!-- END main -->
 
 <!-- BEGIN PLugin Java Script for this page -->
-<script src="{{ asset('js/jquery.min.js') }}" type="text/javascript"></script>
+<!-- <script src="{{ asset('js/jquery.min.js') }}" type="text/javascript"></script> -->
 <script src="{{ asset('js/popper.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/pikeadmin.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/bootbox.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
 <script src="{{ asset('js/fastclick.js') }}" type="text/javascript"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 
 {{-- <script src="{{ asset('assets/js/helper_metroform.js') }}" type="text/javascript"></script> --}}
 
 <!-- BEGIN Java Script for this page -->
 {{-- <script src="{{ asset('assets/js/helper_metroform.js') }}" type="text/javascript"></script> --}}
+
 @yield('js')
 <!-- END Java Script for this page -->
 
@@ -147,6 +153,9 @@
 <!-- insert modal function HERE -->
 {{-- $modal --}}
 <script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
 {{-- $jsmodal --}}
 </script>
 <!-- End Modal -->

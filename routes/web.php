@@ -21,6 +21,16 @@ Route::get('accountdetail/{id}', 'TransController@accountdetail');
 
 //transList
 Route::get('list/purchase', "TransController@listpurchase");
+Route::get('list/expense', "TransController@listexpense");
+Route::get('list/so', "TransController@listsalesorder");
+
+//transView
+Route::get('sales/view/{id}', "TransController@salesview");
+
+//transEdit
+Route::get('sales/edit/{id}', "TransController@salesedit");
+
+
 
 
 

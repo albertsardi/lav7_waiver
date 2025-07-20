@@ -46,35 +46,34 @@ class AppController extends MainController
 
     //Donut Chart (Top 5 Customer)
     $dat = $this->top5salesbycustomer($yr);
-    $donutchart_data = json_encode(arr::pluck($dat,'total'));
+    $donutchart_data = json_encode(arr::pluck($dat,'total')); dump('donut chart');
     $donutchart_label = json_encode(arr::pluck($dat,'acccode'));
 
     //Table Expense
-    $dat = $this->expenselist($yr);
-    $tableexp_data = $dat;
-    $tableexp_label = (arr::pluck($dat,'accname'));
+    $tableexp_data = $this->expenselist($yr);
+    // $tableexp_label = (arr::pluck($dat,'accname')); dump('expense');
 
 
-    $tableExpense = [
-        ['Tiger Nixon', 	'System Architect', 	'Edinburgh', 	'61', 	'2011/04/25', 	'$320,800'],
-        ['Ashton Cox', 	'Junior Technical Author', 	'San Francisco', 	'66', 	'2009/01/12', 	'$86,000'],
-        ['Garrett Winters', 	'Accountant', 	'Tokyo', 	'63', 	'2011/07/25', 	'$170,750'],
-        ['Cedric Kelly', 	'Senior Javascript Developer', 	'Edinburgh', 	'22', 	'2012/03/29', 	'$433,060'],
-        ['Airi Satou', 	'Accountant', 	'Tokyo', 	'33', 	'2008/11/28', 	'$162,700'],
-        ['Brielle Williamson', 	'Integration Specialist', 	'New York', 	'61', 	'2012/12/02', 	'$372,000'],
-        ['Herrod Chandler', 	'Sales Assistant', 	'San Francisco', 	'59', 	'2012/08/06', 	'$137,500'],
-        ['Rhona Davidson', 	'Integration Specialist', 	'Tokyo', 	'55', 	'2010/10/14', 	'$327,900'],
-        ['Colleen Hurst', 	'Javascript Developer', 	'San Francisco', 	'39', 	'2009/09/15', 	'$205,500'],
-        ['Sonya Frost', 	'Software Engineer', 	'Edinburgh', 	'23', 	'2008/12/13', 	'$103,600'],
-        ['Jena Gaines', 	'Office Manager', 	'London', 	'30', 	'2008/12/19', 	'$90,560'],
-        ['Quinn Flynn', 	'Support Lead', 	'Edinburgh', 	'22', 	'2013/03/03', 	'$342,000'],
-        ['Fiona Green', 	'Chief Operating Officer (COO)', 	'San Francisco', 	'48', 	'2010/03/11', 	'$850,000'],
-        ['Shou Itou', 	'Regional Marketing', 'Tokyo', 	'20', 	'2011/08/14', 	'$163,000'],
-        ['Jonas Alexander', 	'Developer', 	'San Francisco', 	'30', 	'2010/07/14', 	'$86,500'],
-        ['Shad Decker', 	'Regional Director', 	'Edinburgh', 	'51', 	'2008/11/13',	'$183,000'],
-        ['Michael Bruce', 	'Javascript Developer', 	'Singapore', 	'29', 	'2011/06/27', 	'$183,000'],
-        ['Donna Snider', 	'Customer Support', 	'New York', 	'27', 	'2011/01/25', 	'$112,000']
-    ];
+    // $tableExpense = [
+    //     ['Tiger Nixon', 	'System Architect', 	'Edinburgh', 	'61', 	'2011/04/25', 	'$320,800'],
+    //     ['Ashton Cox', 	'Junior Technical Author', 	'San Francisco', 	'66', 	'2009/01/12', 	'$86,000'],
+    //     ['Garrett Winters', 	'Accountant', 	'Tokyo', 	'63', 	'2011/07/25', 	'$170,750'],
+    //     ['Cedric Kelly', 	'Senior Javascript Developer', 	'Edinburgh', 	'22', 	'2012/03/29', 	'$433,060'],
+    //     ['Airi Satou', 	'Accountant', 	'Tokyo', 	'33', 	'2008/11/28', 	'$162,700'],
+    //     ['Brielle Williamson', 	'Integration Specialist', 	'New York', 	'61', 	'2012/12/02', 	'$372,000'],
+    //     ['Herrod Chandler', 	'Sales Assistant', 	'San Francisco', 	'59', 	'2012/08/06', 	'$137,500'],
+    //     ['Rhona Davidson', 	'Integration Specialist', 	'Tokyo', 	'55', 	'2010/10/14', 	'$327,900'],
+    //     ['Colleen Hurst', 	'Javascript Developer', 	'San Francisco', 	'39', 	'2009/09/15', 	'$205,500'],
+    //     ['Sonya Frost', 	'Software Engineer', 	'Edinburgh', 	'23', 	'2008/12/13', 	'$103,600'],
+    //     ['Jena Gaines', 	'Office Manager', 	'London', 	'30', 	'2008/12/19', 	'$90,560'],
+    //     ['Quinn Flynn', 	'Support Lead', 	'Edinburgh', 	'22', 	'2013/03/03', 	'$342,000'],
+    //     ['Fiona Green', 	'Chief Operating Officer (COO)', 	'San Francisco', 	'48', 	'2010/03/11', 	'$850,000'],
+    //     ['Shou Itou', 	'Regional Marketing', 'Tokyo', 	'20', 	'2011/08/14', 	'$163,000'],
+    //     ['Jonas Alexander', 	'Developer', 	'San Francisco', 	'30', 	'2010/07/14', 	'$86,500'],
+    //     ['Shad Decker', 	'Regional Director', 	'Edinburgh', 	'51', 	'2008/11/13',	'$183,000'],
+    //     ['Michael Bruce', 	'Javascript Developer', 	'Singapore', 	'29', 	'2011/06/27', 	'$183,000'],
+    //     ['Donna Snider', 	'Customer Support', 	'New York', 	'27', 	'2011/01/25', 	'$112,000']
+    // ];
     $data=['table'=>'',
             'chart1_sales'=>'',
             'chart1_profit'=>'',
@@ -84,7 +83,7 @@ class AppController extends MainController
             'piechart_label'=>'',
             'donutchart_data'=>'',
             'donutchart_label'=>'',
-            'tableExpense'=>$this->create_table($tableExpense),
+            'tableExpense'=>$this->create_table($tableexp_data,['Expense Group', 'Total'], ['class'=>"table table-bordered "]),
             'yr'=>$yr
     ];
     //dd($data);
@@ -293,17 +292,18 @@ function top5salesbycustomer($yr=null) {
 
 function expenselist($yr=null) {
     $yr=2018;
-    $dat = $this->DB_select("SELECT jr.accno,mastercoa.accname,SUM(amount) AS total FROM journal jr
-                        LEFT JOIN mastercoa ON mastercoa.accno=jr.accno
-                        WHERE catname IN ('Expenses','Other Expense') AND YEAR(jrdate)='$yr'
-                        GROUP BY jr.accno,mastercoa.accname
-                        HAVING total>0
-                        ORDER BY total DESC ");
-    for($a=0;$a<count($dat);$a++) {
+    $dat = $this->DB_select("SELECT IFNULL(c.Name,'')as name,SUM(e.Amount)AS total
+                                FROM expenses AS e
+                                LEFT JOIN categories c ON c.id=e.ExpCategory_id
+                                GROUP BY c.Name
+                                ORDER BY SUM(e.Amount) DESC ");
+    // for($a=0;$a<count($dat);$a++) {
         //$tot=$tot+$dat[$a]['total'];
-    }
+    // }
     return $dat;
 }
+
+
 
 // Login
 function login(Request $req) {
@@ -349,18 +349,6 @@ function chart_fillyeardata($arr) {
     }
     $xdat1=array_shift($xdat);
     return $xdat;
-}
-
-function create_table($data) {
-    $out = '';
-    foreach($data as $r){
-        $out.='<tr>';
-        foreach($r as $c) {
-            $out.="<td>$c</td>";
-        }
-        $out.='</tr>';
-    }
-    return $out;
 }
 
 

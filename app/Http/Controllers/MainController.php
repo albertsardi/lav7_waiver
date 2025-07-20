@@ -67,6 +67,11 @@ public function fnum($num) {
   return number_format($num,0);
 }
 
+public function fcur($num) {
+  $num=intval($num);
+  return 'Rp. '.number_format($num,2);
+}
+
 function space($num) {
   return str_repeat(' ',$num);
 }
@@ -198,6 +203,24 @@ function generateCategory($cattype) {
 	}
 	dump('generate product category sucessfull.');
 	
+}
+
+function create_table($arr, $tablecaption=[], $opt=[]) {
+    $id = !empty($opt['id'])? ('id='.$opt['id']) : '';
+    $class = !empty($opt['class'])? ("class='$opt[class]'") : '';
+    $out = "<table $id $class>";
+    //headcaption
+    if($tablecaption!=[]) {
+        $out.= '<theader><tr><th>'.join('</th><th>',$tablecaption).'</th><tr><theader>'; 
+    }
+    // //detail
+    foreach($arr as $r) {
+        if(isset($r['total'])) $r['total'] = $this->fcur($r['total']);
+        if(isset($r['Total'])) $r['Total'] = $this->fcur($r['total']);
+        $out.= '<tbody><tr><td>'.join('</td><td>',(array)$r).'</td><tr></tbody>'; 
+    }
+    $out.='</table>';
+    return $out;
 }
 	
 
@@ -449,35 +472,35 @@ function form_input_array($arr=[]){
   return $r;
 }
 
-function table_generate($data, $header=[], $align=[]) {
-  if(isset($data[0])) {
-      $key=array_keys($data[0]);
-  } else {
-      $key=null;
-  }
-  if($header==[]) $header=$key;
-  $r="<thead>";
-  $r.="<tr>";
-  for($b=0;$b<count($header);$b++) {
-      $r.="<th>".$header[$b]."</th>";
-      if(!isset($align[$b])) $align[$b]='left';
-  }
-  $r.="</tr>";
-  $r.="</thead>";
+// function table_generate($data, $header=[], $align=[]) {
+//   if(isset($data[0])) {
+//       $key=array_keys($data[0]);
+//   } else {
+//       $key=null;
+//   }
+//   if($header==[]) $header=$key;
+//   $r="<thead>";
+//   $r.="<tr>";
+//   for($b=0;$b<count($header);$b++) {
+//       $r.="<th>".$header[$b]."</th>";
+//       if(!isset($align[$b])) $align[$b]='left';
+//   }
+//   $r.="</tr>";
+//   $r.="</thead>";
 
-  $r.="<tbody>";
-  for($a=0;$a<count($data);$a++) {
-      $r.="<tr>";
-      for($b=0;$b<count($key);$b++) { //test
-          //$al = ($align[$b]!='left')?"align='$align[$b]'":"";
-          $al=''; //debug
-          $r.="<td $al>".$data[$a][$key[$b]]."</td>";
-      }
-      $r.="</tr>";
-  }
-  $r.="</tbody>";
-  return $r;
-}
+//   $r.="<tbody>";
+//   for($a=0;$a<count($data);$a++) {
+//       $r.="<tr>";
+//       for($b=0;$b<count($key);$b++) { //test
+//           //$al = ($align[$b]!='left')?"align='$align[$b]'":"";
+//           $al=''; //debug
+//           $r.="<td $al>".$data[$a][$key[$b]]."</td>";
+//       }
+//       $r.="</tr>";
+//   }
+//   $r.="</tbody>";
+//   return $r;
+// }
 
 function profile_image($img) {
   $blank_image = 'assets/images/avatar_2x.png';
