@@ -231,11 +231,11 @@ function salesedit($id) {
         [2, 'hpp2'],
     ];
     $data['mProduct'] = MainController::getOption('products',['id','name'], "active='1' ") ;
-    $data['detail'] = DB::table('details')->where('TransNo','PI.1800010')->orderBy('id')->get();
+    $data['detail'] = DB::table('details')->where('TransNo','SO.1800001')->orderBy('id')->get();
     
     $data['data'] = Supplier::find($id);
     dump($data);
-    return view('salesorder.form', $data);
+    return view('salesorder.form2', $data);
 }
 
     function editSupplier($id){

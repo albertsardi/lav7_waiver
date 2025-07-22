@@ -46,7 +46,7 @@
     </div> 
 
     <!-- Detail -->
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" x-data="{search:'', detail:{!! json_encode($detail) !!}">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" x-data='{ data: {!! json_encode($detail) !!} }'>
         <div class="card mb-3">
             <div class="card-header">
                 <h3><i class="fa fa-check-square-o"></i> Detail {title}</h3>
@@ -68,12 +68,86 @@
                         </div>
                     @endforeach
                     <div class="col">
-                        <button id='btnAddItem' type='button' onclick='addItem()'>Add Item</button>
+                        <button type="button" x-on:click="pushData(data);" >Add</button>
+                    </div>A
+                </div>
+                <div class='row'>
+                    <!-- <div id='grid'></div> -->
+                     <table class="table table-bordered toggle-circle mb-0">
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Product</th>
+                                                            <th>Unit</th>
+                                                            <th>Qty</th>
+                                                            <th>Price</th>
+                                                            <th>discount</th>
+                                                            <th>Amount</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                        <template x-for="(d, i) in data" :key="Date.now() + Math.floor(Math.random() * 1000000)">
+                                                            <tr x-data="{
+                                                                    url1:'{{url('/')}}'+'/patient/view/'+d.pat_number, 
+                                                                    url2:'{{url('/')}}'+'/patient/edit/'+d.pat_number
+                                                                    }">
+                                                                <td x-text="i+1"></td>
+                                                                <td x-text="d.ProductName"></td>
+                                                                <td x-text="d.UOM"></td>
+                                                                <td x-text="d.Qty"></td>
+                                                                <td x-text="d.Cost"></td>
+                                                                <td x-text="d.DiscPercentD"></td>
+                                                                <td>amount</td>
+                                                                <td >
+                                                                    <a x-data="{url:url1}" x-bind:href="url" class="badge badge-success"><i class="mdi mdi-eye"></i> View</a>
+                                                                    <a x-data="{url:url2}" x-bind:href="url" class="badge badge-primary"><i class="mdi mdi-eye"></i> Edit</a>
+                                                                </td>
+                                                            </tr>
+                                                        </template>
+                                                    </table>
+                </div>
+                <div class='row'>
+                    <button type='button' onclick={greet}>click me</button>
+                </div>
+                
+            </div>
+        </div><!-- end card-->
+    </div> 
+
+    <!-- Test -->
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" x-data="{search:'', data:content}">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3><i class="fa fa-check-square-o"></i> Test</h3>
+            </div>
+            <div class="card-body">
+                <div class='row'>
+                    <div class="col">
+                            <!-- <label class='form-label'>Product</label>    
+                            {{ Form::combo('input-Product', 'Product', $mProduct) }} -->
+                        </div>
+                    @php
+                        $label = ['Product','Unit', 'Qty', 'Price','Disc &'];
+                        $name = ['input-Product','input-Unit', 'input-Qty', 'input-Price','input-Disc'];
+                    @endphp
+                    @foreach($name as $idx=>$nm)
+                        <div class="col">
+                            <label class='form-label'>{{$label[$idx]}}</label>    
+                            <input type="text" id="{{$nm}}" name="{{$nm}}" class="form-control" placeholder="First name" aria-label="First name">
+                        </div>
+                    @endforeach
+                    <div class="col">
+                        <button type='button' @click="add_item()">Add Item</button>
                     </div>
                 </div>
                 <div class='row'>
-                    <div id='grid'></div>
-                </div>
+                    <!-- <div id='grid'></div> -->
+                     <template x-for="(d, i) in data" :key="Date.now() + Math.floor(Math.random() * 1000000)">
+                        <div style="display: table-row">
+                            <div style="display: table-cell" x-text="i + 1"></div>
+                            <div style="display: table-cell" x-text="d.name"></div>
+                            <div style="display: table-cell" x-text="data[i].description"></div>
+                        </div>
+                    </template>
+</div>
                 <div class='row'>
                     <button type='button' onclick={greet}>click me</button>
                 </div>
@@ -86,6 +160,14 @@
 @section('js')
     <script lang="ts">
         let title = 'world'
+        var detail = {!! json_encode($detail) !!}
+        let content = [
+            { name: 'Test 1', description: 'Test Description 1' },
+            { name: 'Test 2', description: 'Test Description 2' },
+            { name: 'Test 3', description: 'Test Description 3' },
+            { name: 'Test 4', description: 'Test Description 4' },
+            { name: 'Test 5', description: 'Test Description 5' },
+        ];
         //init button
         function getPName(id) {
             let productLib = {!! json_encode($mProduct) !!}
@@ -94,48 +176,53 @@
             }
             return ''
         }
-        function addItem(){
-            alert('add item');
-            let input = [];
-            input.unit = document.getElementById("input-Unit");
-            input.product = document.getElementById("input-Product");
-            //console.log('velue='+input.product.value+'-'+input.product.options[input.product.selectedIndex])
-            const selectElement = document.getElementById('input-Product');
-            const selectedIndex = selectElement.selectedIndex;
-            const selectedOption = selectElement.options[selectedIndex];
-            const selectedText = selectedOption.text;
-            console.log(selectedIndex+'-'+selectedText)
-            input.qty = document.getElementById("input-Qty");
-            input.price = document.getElementById("input-Price");
-            input.disc = document.getElementById("input-Disc");
-            // const result = productLib.filter((word) => word[0]==input.product.value);
-            // console.log(result);
-            productname = getPName(input.product.value)
-            qty = parseFloat(input.qty.value??'')
-            price = parseFloat(input.price.value??'')
-            disc = parseFloat(input.disc.value??'')
-            let newItem = {
-                "TransNo":"PI.1800001",
-                "ProductCode":input.product.value,
-                "ProductName":selectedText,
-                "Qty":qty,
-                "UOM":input.unit.value??'',
-                "Price":price,
-                "DiscPercentD":disc,
-                "Cost":"10455.00",
+        
+        function add_item() {
+            alert('add item 123')
+            
+            let newLine = {
+                "TransNo":"SO.1800001",
+                "ProductCode":"new-line",
+                "ProductName":"new-line",
+                "Qty":"3140.00",
+                "UOM":"Pcs",
+                "Price":"520.00",
+                "DiscPercentD":0,
+                "Cost":"520.00",
                 "Memo":"",
                 "Sono":"",
-                "id":0,
                 "ProductType":0,
-                "Amount":qty * price - (disc * price/100),
             }
-            detail.push(newItem);
+            detail.push(newLine);
+            console.log(detail);
+        }
+        function pushData(data)
+        {
+            //  ['input-Product','input-Unit', 'input-Qty', 'input-Price','input-Disc'];
+            var sel = document.getElementById("input-Product");
+            var PCode = sel.value;
+            var PName = sel.options[sel.selectedIndex].text;
+            let newLine = {
+                "TransNo":"SO.1800001",
+                "ProductCode":PCode,
+                "ProductName":PName,
+                "Qty":document.getElementById('input-Qty').value, 
+                "UOM":document.getElementById('input-Unit').value, 
+                "Price":document.getElementById('input-Price').value, //"520.00"
+                "DiscPercentD":document.getElementById('input-Disc').value,
+                "Cost":document.getElementById('input-Price').value, //12345,
+                "Memo":"",
+                "Sono":"",
+                "ProductType":0,
+            }
+            data.push(newLine);
+            console.log(newLine)
         }
         function greet(){
             alert('Welcoome Svelte !!!')
         }
         //init Tabulator
-        var detail = {!! $detail !!}
+        //var detail = {!! $detail !!}
         const detailData = document.getElementById("grid_data");
         console.log(detail)
         detailData.value = JSON.stringify(detail)

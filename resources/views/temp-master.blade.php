@@ -134,8 +134,14 @@
 <script src="{{ asset('js/bootbox.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
 <script src="{{ asset('js/fastclick.js') }}" type="text/javascript"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
+{{-- <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script> --}}
+{{-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> --}}
+
+<!--Load AlpineJS Javascript-->
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+<!--Load Sweet Alert Javascript-->
+<script src="{{ asset('js/swal.js') }}"></script>
 
 
 {{-- <script src="{{ asset('assets/js/helper_metroform.js') }}" type="text/javascript"></script> --}}

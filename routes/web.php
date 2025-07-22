@@ -46,6 +46,7 @@ Route::get('dashboard', 'AppController@dashboard');
 Route::get('reportall', 'AppController@reportall');
 Route::get('setting', 'AppController@setting');
 Route::get('logout', 'AppController@logout');
+Route::get('test2', function () { return view('test2'); });
 
 
 //edit  trans
