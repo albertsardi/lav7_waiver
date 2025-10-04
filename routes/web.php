@@ -21,6 +21,7 @@ Route::get('accountdetail/{id}', 'TransController@accountdetail');
 
 //transList
 Route::get('list/purchase', "TransController@listpurchase");
+Route::get('list/expense', "TransController@listexpense");
 
 
 

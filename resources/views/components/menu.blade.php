@@ -1,4 +1,5 @@
 @php
+  dump('menu');
   $menu = [[
       'link' => 'reportall',
       'title' => 'reports',
@@ -32,6 +33,11 @@
     [
       'link'=>'expenses',
       'title' => 'Expenses',
+      'icon' => 'fa-file-text-o',
+    ],
+    [
+      'link'=>'payments',
+      'title' => 'Payment123',
       'icon' => 'fa-file-text-o',
     ],
     [

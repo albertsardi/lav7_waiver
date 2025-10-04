@@ -126,8 +126,12 @@
 								<table id="example1" class="table table-bordered table-responsive-xl table-hover display">
 									<thead>
 										<tr>
-											<th>Expense Category</th>
-											<th>Amount</th>
+											<th>Name</th>
+											<th>Position</th>
+											<th>Office</th>
+											<th>Age</th>
+											<th>Start date</th>
+											<th>Salary</th>
 										</tr>
 									</thead>													
 									<tbody>
@@ -226,7 +230,19 @@
 	var ctx2 = document.getElementById("lineChart2").getContext('2d');
 	var lineChart2 = new Chart(ctx2, {
 		type: 'bar',
-		data: {!! $chartdata3 !!},
+		data: {
+			labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+			datasets: [{
+					label: 'Sales 2019a',
+					backgroundColor: '#3EB9DC',
+					data: [100,200,300]
+				}, {
+					label: 'Sales 2018a',
+					backgroundColor: '#ff9f40',
+					data: [110,210,310]
+				}]
+
+		},
 		options: {
             tooltips: {
                 mode: 'index',
@@ -247,7 +263,7 @@
 	var ctx3 = document.getElementById("pieChart").getContext('2d');
         var pieChart = new Chart(ctx3, {
           type: 'pie',
-          data: {!! $chartdataPie !!},
+          data: {"labels":["Andreas Teja","Walking Customer "],"datasets":[{"label":"Sales","backgroundColor":["rgba(255,99,132,1)","rgba(54, 162, 235, 1)","rgba(255, 206, 86, 1)","rgba(75, 192, 192, 1)","rgba(153, 102, 255, 1)","rgba(255, 159, 64, 1)"],"data":["170000.0000","88000.0000"]}]},
           options: {
                   tooltips: {
                     mode: 'index',
@@ -269,8 +285,10 @@
 			  var ctx4 = document.getElementById("doughnutChart").getContext('2d');
         var doughnutChart = new Chart(ctx4, {
           type: 'doughnut',
-          data: {!! $chartdataDonut !!},
-        	options: { responsive: true }
+          data: {"labels":["cat1","cat3","cat2",null],"datasets":[{"label":"Sales","backgroundColor":["rgba(255,99,132,1)","rgba(54, 162, 235, 1)","rgba(255, 206, 86, 1)","rgba(75, 192, 192, 1)","rgba(153, 102, 255, 1)","rgba(255, 159, 64, 1)"],"data":["194000.0000","34000.0000","30000.0000",null]}]},
+              options: {
+                  responsive: true
+              }
 
         });
 

@@ -8,11 +8,11 @@
 		<meta name="author" content="Albert - (c)ASAfoodenesia">
 
 		<!-- Favicon -->
-		<link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
+		<link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
 		
-		<link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" >
-		<link href="{{ asset('assets/css/fontawesome/font-awesome.min.css') }}" rel="stylesheet" type="text/css" >
-		<link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" type="text/css" >
+		<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" >
+		<link href="{{ asset('css/fontawesome/font-awesome.min.css') }}" rel="stylesheet" type="text/css" >
+		<link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css" >
 		<!-- BEGIN CSS for this page -->
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css"/>
 		<!-- END CSS for this page -->

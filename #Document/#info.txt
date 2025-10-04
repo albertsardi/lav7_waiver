@@ -1,0 +1,2 @@
+#test alpineJS in laravel
+https://benjamincrozat.com/alpine-js-laravel#introduction-to-alpinejs-in-laravel

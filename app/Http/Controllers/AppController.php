@@ -23,7 +23,7 @@ class AppController extends MainController
     //require 'helper_table.php';
     //$cn=db_connect();
     $yr=date('Y');
-    $yr='2019'; //debug
+    $yr='2018'; //debug
 
     //Chart1
     $sales = $this->salesbyyear($yr);
@@ -54,6 +54,45 @@ class AppController extends MainController
     $tableexp_data = $dat;
     $tableexp_label = (arr::pluck($dat,'accname'));
 
+    $monthname = [];
+    for($a=1;$a<=12;$a++) $monthname[] = date('M', strtotime("2013-$a-15"));
+    $bgcolor = ["rgba(255,99,132,1)","rgba(54, 162, 235, 1)","rgba(255, 206, 86, 1)","rgba(75, 192, 192, 1)","rgba(153, 102, 255, 1)","rgba(255, 159, 64, 1)"];
+    $data = [];
+    $data['chartdataDonut'] = [
+        "labels"=>["cat1","cat3","cat2"],
+        "datasets"=>[
+                        ["label"=> "Sales",
+                          "backgroundColor"=>$bgcolor,
+                          "data"=> ["194000.0000","34000.0000","30000.0000"], ]
+                    ]
+        ];
+    $data['chartdataDonut'] = json_encode($data['chartdataDonut']);
+    $data['chartdataPie'] = [
+            'labels'=>["Andreas Teja","Walking Customer "],
+            'datasets'=>[
+                    ['label'=>'Sales',
+                      "backgroundColor"=> $bgcolor,
+                      "data"=>["170000.0000","88000.0000"], ],
+                ]
+        ];
+    $data['chartdataPie'] = json_encode($data['chartdataPie']);
+    $data['chartdata3'] = [
+			'labels'=> $monthname,
+			'datasets'=> [
+                            [
+                                'label'=> 'Sales 2019a',
+                                'backgroundColor'=> '#3EB9DC',
+                                'data'=> [100,200,300],
+                            ],
+                            [ 
+                                'label'=> 'Sales 2018a',
+                                'backgroundColor'=> '#ff9f40',
+                                'data'=> [110,210,310], 
+                            ]
+				]
+            ];
+    $data['chartdata3'] = json_encode($data['chartdata3']);
+
 
     $tableExpense = [
         ['Tiger Nixon', 	'System Architect', 	'Edinburgh', 	'61', 	'2011/04/25', 	'$320,800'],
@@ -75,18 +114,20 @@ class AppController extends MainController
         ['Michael Bruce', 	'Javascript Developer', 	'Singapore', 	'29', 	'2011/06/27', 	'$183,000'],
         ['Donna Snider', 	'Customer Support', 	'New York', 	'27', 	'2011/01/25', 	'$112,000']
     ];
-    $data=['table'=>'',
-            'chart1_sales'=>'',
-            'chart1_profit'=>'',
-            'chart2_data1'=>'',
-            'chart2_data2'=>'',
-            'piechart_data'=>'',
-            'piechart_label'=>'',
-            'donutchart_data'=>'',
-            'donutchart_label'=>'',
-            'tableExpense'=>$this->create_table($tableExpense),
-            'yr'=>$yr
-    ];
+    // $data=['table'=>'',
+    //         'chart1_sales'=>'',
+    //         'chart1_profit'=>'',
+    //         'chart2_data1'=>'',
+    //         'chart2_data2'=>'',
+    //         'piechart_data'=>'',
+    //         'piechart_label'=>'',
+    //         'donutchart_data'=>'',
+    //         'donutchart_label'=>'',
+    //         'tableExpense'=>$this->create_table($tableExpense),
+    //         'yr'=>$yr
+    // ];
+    $tableExpense = DB::select("SELECT ExpCategory,SUM(amount)AS Total FROM expenses WHERE YEAR(JRdate)='2018' AND amount>0 GROUP BY ExpCategory ORDER BY amount DESC");
+    $data['tableExpense']=$this->create_table($tableExpense);
     //dd($data);
     //return View::make('dashboard', $data);
     return view('dashboard', $data);
@@ -293,12 +334,17 @@ function top5salesbycustomer($yr=null) {
 
 function expenselist($yr=null) {
     $yr=2018;
-    $dat = $this->DB_select("SELECT jr.accno,mastercoa.accname,SUM(amount) AS total FROM journal jr
-                        LEFT JOIN mastercoa ON mastercoa.accno=jr.accno
-                        WHERE catname IN ('Expenses','Other Expense') AND YEAR(jrdate)='$yr'
-                        GROUP BY jr.accno,mastercoa.accname
-                        HAVING total>0
-                        ORDER BY total DESC ");
+    // $dat = $this->DB_select("SELECT jr.accno,mastercoa.accname,SUM(amount) AS total FROM journal jr
+    //                     LEFT JOIN mastercoa ON mastercoa.accno=jr.accno
+    //                     WHERE catname IN ('Expenses','Other Expense') AND YEAR(jrdate)='$yr'
+    //                     GROUP BY jr.accno,mastercoa.accname
+    //                     HAVING total>0
+    //                     ORDER BY total DESC ");
+    $dat = $this->DB_select("SELECT ExpCategory,SUM(amount) AS total FROM expenses 
+                                WHERE YEAR(jrdate)='2018'
+                                GROUP BY ExpCategory
+                                HAVING total>0
+                                ORDER BY total DESC");
     for($a=0;$a<count($dat);$a++) {
         //$tot=$tot+$dat[$a]['total'];
     }
